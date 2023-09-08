@@ -19,6 +19,7 @@ func NewDatabaseServiceProvider(config config.Config) foundation.ServiceProvider
 		commands: []contractconsole.Command{
 			console.NewMigrateCommand(),
 			console.NewMigrationCommand(config),
+			console.NewSeederCommand(config),
 		},
 	}
 }
