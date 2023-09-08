@@ -1,24 +1,39 @@
 package foundation
 
 import (
+	"github.com/fwidjaya20/go-framework/config"
+	ContractConfig "github.com/fwidjaya20/go-framework/contracts/config"
 	"github.com/fwidjaya20/go-framework/contracts/foundation"
-	"github.com/fwidjaya20/go-framework/database"
 )
 
+var (
+	App foundation.Application
+)
+
+func init() {
+	App = &Application{
+		config: config.NewApplication(".env.example"),
+	}
+}
+
 type Application struct {
-	services []foundation.ServiceProvider
+	config ContractConfig.Config
 }
 
 func NewApplication() foundation.Application {
-	return &Application{
-		services: []foundation.ServiceProvider{
-			database.NewDatabaseServiceProvider(),
-		},
-	}
+	return App
 }
 
 func (app *Application) Boot() {
-	for _, it := range app.services {
+	for _, it := range app.getServiceProviders() {
 		it.Boot()
 	}
+}
+
+func (app *Application) Config() ContractConfig.Config {
+	return app.config
+}
+
+func (app *Application) getServiceProviders() []foundation.ServiceProvider {
+	return app.config.Env("app.providers").([]foundation.ServiceProvider)
 }

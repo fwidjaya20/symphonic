@@ -2,6 +2,9 @@
 .idea/
 .vscode/
 
+# Environment
+.env
+
 # Misc
 DS_Store/
 main.go
