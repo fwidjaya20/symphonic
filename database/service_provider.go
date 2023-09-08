@@ -1,6 +1,7 @@
 package database
 
 import (
+	"github.com/fwidjaya20/go-framework/contracts/config"
 	contractconsole "github.com/fwidjaya20/go-framework/contracts/console"
 	"github.com/fwidjaya20/go-framework/contracts/foundation"
 	"github.com/fwidjaya20/go-framework/database/console"
@@ -13,10 +14,11 @@ type ServiceProvider struct {
 	commands []contractconsole.Command
 }
 
-func NewDatabaseServiceProvider() foundation.ServiceProvider {
+func NewDatabaseServiceProvider(config config.Config) foundation.ServiceProvider {
 	return &ServiceProvider{
 		commands: []contractconsole.Command{
 			console.NewMigrateCommand(),
+			console.NewMigrationCommand(config),
 		},
 	}
 }

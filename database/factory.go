@@ -9,11 +9,7 @@ func factoryCommands(commands []console.Command) []*cli.Command {
 	var objCmd = make([]*cli.Command, len(commands))
 
 	for i, it := range commands {
-		objCmd[i] = &cli.Command{
-			Name:        it.Signature(),
-			Description: it.Description(),
-			Action:      it.Handle,
-		}
+		objCmd[i] = it.Setup()
 	}
 
 	return objCmd

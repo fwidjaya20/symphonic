@@ -12,19 +12,15 @@ func NewMigrateCommand() console.Command {
 	return &MigrateCommand{}
 }
 
-func (cmd *MigrateCommand) Signature() string {
-	return "migrate"
-}
-
-func (cmd *MigrateCommand) Description() string {
-	return "Run all database migrations"
-}
-
-func (cmd *MigrateCommand) Extend() cli.Command {
-	return cli.Command{}
+func (cmd *MigrateCommand) Setup() *cli.Command {
+	return &cli.Command{
+		Name:        "migrate",
+		Description: "Run all database migrations",
+		Action:      cmd.Handle,
+	}
 }
 
 func (cmd *MigrateCommand) Handle(*cli.Context) error {
-	fmt.Println("Hello World")
+	fmt.Println("Run all Database Migration")
 	return nil
 }

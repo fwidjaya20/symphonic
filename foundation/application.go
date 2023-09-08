@@ -12,7 +12,7 @@ var (
 
 func init() {
 	App = &Application{
-		config: config.NewApplication(".env.example"),
+		config: config.NewApplication(".env"),
 	}
 }
 
