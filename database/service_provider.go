@@ -17,7 +17,7 @@ type ServiceProvider struct {
 func NewDatabaseServiceProvider(config config.Config) foundation.ServiceProvider {
 	return &ServiceProvider{
 		commands: []contractconsole.Command{
-			console.NewMigrateCommand(),
+			console.NewMigrateCommand(config),
 			console.NewMigrationCommand(config),
 			console.NewSeederCommand(config),
 		},
