@@ -23,6 +23,7 @@ func NewDatabaseServiceProvider(config config.Config) foundation.ServiceProvider
 			console.NewMigrateRollbackCommand(config),
 			console.NewMigrateStatusCommand(config),
 			console.NewMigrationCommand(config),
+			console.NewSeedCommand(config),
 			console.NewSeederCommand(config),
 		},
 	}

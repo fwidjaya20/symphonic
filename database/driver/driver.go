@@ -2,15 +2,16 @@ package driver
 
 import (
 	"database/sql"
+	"log"
+
 	"github.com/fwidjaya20/go-framework/contracts/config"
 	"github.com/golang-migrate/migrate/v4/database"
-	"log"
 )
 
 type DatabaseDriver interface {
 	GetDSN() string
 	Open() (*sql.DB, error)
-	GetInstance() (database.Driver, error)
+	GetInstance(table string) (database.Driver, error)
 }
 
 func GetDatabaseDriver(config config.Config) DatabaseDriver {

@@ -11,14 +11,14 @@ import (
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-func getMigrate(config config.Config) (*migrate.Migrate, error) {
+func getSeeder(config config.Config) (*migrate.Migrate, error) {
 	rootDir, _ := os.Getwd()
 	dbDriver := driver.GetDatabaseDriver(config)
 
-	artifactsDir := fmt.Sprintf("%s/%s/%s", rootDir, config.Env("database.dir", constant.DefaultDatabasePath), constant.DefaultMigrationDir)
+	artifactsDir := fmt.Sprintf("%s/%s/%s", rootDir, config.Env("database.dir", constant.DefaultDatabasePath), constant.DefaultSeederDir)
 	databaseName := config.Env(fmt.Sprintf("database.connections.%s.database", config.Env("database.default")))
 
-	instance, err := dbDriver.GetInstance("schema_migrations")
+	instance, err := dbDriver.GetInstance("schema_seeders")
 	if nil != err {
 		return nil, err
 	}

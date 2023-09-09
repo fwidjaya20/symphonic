@@ -2,6 +2,7 @@ package console
 
 import (
 	"errors"
+
 	"github.com/fwidjaya20/go-framework/contracts/config"
 	"github.com/fwidjaya20/go-framework/contracts/console"
 	"github.com/golang-migrate/migrate/v4"
@@ -30,6 +31,19 @@ func (cmd *MigrateResetCommand) Setup() *cli.Command {
 
 func (cmd *MigrateResetCommand) Handle(*cli.Context) error {
 	instance, err := getMigrate(cmd.config)
+	if nil != err {
+		return err
+	}
+	if nil == instance {
+		color.Yellowln("Database configuration was invalid!")
+		return nil
+	}
+
+	if err := instance.Down(); nil != err && !errors.Is(err, migrate.ErrNoChange) {
+		return err
+	}
+
+	instance, err = getSeeder(cmd.config)
 	if nil != err {
 		return err
 	}

@@ -3,6 +3,7 @@ package driver
 import (
 	"database/sql"
 	"fmt"
+
 	"github.com/fwidjaya20/go-framework/contracts/config"
 	"github.com/golang-migrate/migrate/v4/database"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
@@ -29,13 +30,15 @@ func (driver *Pgsql) GetDSN() string {
 	)
 }
 
-func (driver *Pgsql) GetInstance() (database.Driver, error) {
+func (driver *Pgsql) GetInstance(table string) (database.Driver, error) {
 	conn, err := driver.Open()
 	if nil != err {
 		return nil, err
 	}
 
-	return postgres.WithInstance(conn, &postgres.Config{})
+	return postgres.WithInstance(conn, &postgres.Config{
+		MigrationsTable: table,
+	})
 }
 
 func (driver *Pgsql) Open() (*sql.DB, error) {

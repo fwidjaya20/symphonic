@@ -1,6 +1,7 @@
 package constant
 
 const (
-	DefaultMigrationDir = "migrations"
 	DefaultDatabasePath = "./database"
+	DefaultMigrationDir = "migrations"
+	DefaultSeederDir    = "seeders"
 )
