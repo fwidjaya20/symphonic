@@ -1,13 +1,14 @@
 package database
 
 import (
+	"log"
+	"os"
+
 	"github.com/fwidjaya20/go-framework/contracts/config"
 	contractconsole "github.com/fwidjaya20/go-framework/contracts/console"
 	"github.com/fwidjaya20/go-framework/contracts/foundation"
 	"github.com/fwidjaya20/go-framework/database/console"
 	"github.com/urfave/cli/v2"
-	"log"
-	"os"
 )
 
 type ServiceProvider struct {
@@ -19,6 +20,7 @@ func NewDatabaseServiceProvider(config config.Config) foundation.ServiceProvider
 		commands: []contractconsole.Command{
 			console.NewMigrateCommand(config),
 			console.NewMigrateResetCommand(config),
+			console.NewMigrateStatusCommand(config),
 			console.NewMigrationCommand(config),
 			console.NewSeederCommand(config),
 		},
