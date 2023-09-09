@@ -5,8 +5,8 @@ import (
 	"github.com/fwidjaya20/go-framework/contracts/config"
 	"github.com/fwidjaya20/go-framework/contracts/console"
 	"github.com/golang-migrate/migrate/v4"
+	"github.com/gookit/color"
 	"github.com/urfave/cli/v2"
-	"log"
 )
 
 type MigrateCommand struct {
@@ -33,14 +33,19 @@ func (cmd *MigrateCommand) Handle(*cli.Context) error {
 		return err
 	}
 	if nil == instance {
-		log.Fatalln("Database config was invalid!")
+		color.Yellowln("Database configuration was invalid!")
 		return nil
 	}
 
-	if err := instance.Up(); nil != err && errors.Is(err, migrate.ErrNoChange) {
-		log.Fatalln("Database Migrate has been failed!", err.Error())
+	if err := instance.Up(); nil != err {
+		if errors.Is(err, migrate.ErrNoChange) {
+			color.Greenln("There is no new migration files.")
+			return nil
+		}
 		return err
 	}
+
+	color.Greenln("Migration has been completed.")
 
 	return nil
 }

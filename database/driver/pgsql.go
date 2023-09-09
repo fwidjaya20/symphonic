@@ -1,8 +1,11 @@
 package driver
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/fwidjaya20/go-framework/contracts/config"
+	"github.com/golang-migrate/migrate/v4/database"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
 )
 
 type Pgsql struct {
@@ -24,4 +27,17 @@ func (driver *Pgsql) GetDSN() string {
 		driver.config.Env("database.connections.postgresql.database"),
 		driver.config.Env("database.timezone"),
 	)
+}
+
+func (driver *Pgsql) GetInstance() (database.Driver, error) {
+	conn, err := driver.Open()
+	if nil != err {
+		return nil, err
+	}
+
+	return postgres.WithInstance(conn, &postgres.Config{})
+}
+
+func (driver *Pgsql) Open() (*sql.DB, error) {
+	return sql.Open("postgres", driver.GetDSN())
 }
