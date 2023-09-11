@@ -5,6 +5,7 @@ go 1.21.1
 require (
 	github.com/golang-migrate/migrate/v4 v4.16.2
 	github.com/golang-module/carbon/v2 v2.2.6
+	github.com/gookit/color v1.5.4
 	github.com/spf13/viper v1.16.0
 	github.com/urfave/cli/v2 v2.25.7
 )
@@ -12,7 +13,6 @@ require (
 require (
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/fsnotify/fsnotify v1.6.0 // indirect
-	github.com/gookit/color v1.5.4 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect

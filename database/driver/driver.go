@@ -15,7 +15,7 @@ type DatabaseDriver interface {
 }
 
 func GetDatabaseDriver(config config.Config) DatabaseDriver {
-	switch config.Env("database.default") {
+	switch config.Get("database.default") {
 	case "postgresql":
 		return NewPostgreSqlDriver(config)
 	default:

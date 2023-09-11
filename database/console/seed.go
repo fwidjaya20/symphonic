@@ -15,8 +15,8 @@ func getSeeder(config config.Config) (*migrate.Migrate, error) {
 	rootDir, _ := os.Getwd()
 	dbDriver := driver.GetDatabaseDriver(config)
 
-	artifactsDir := fmt.Sprintf("%s/%s/%s", rootDir, config.Env("database.dir", constant.DefaultDatabasePath), constant.DefaultSeederDir)
-	databaseName := config.Env(fmt.Sprintf("database.connections.%s.database", config.Env("database.default")))
+	artifactsDir := fmt.Sprintf("%s/%s/%s", rootDir, config.Get("database.dir", constant.DefaultDatabasePath), constant.DefaultSeederDir)
+	databaseName := config.Get(fmt.Sprintf("database.connections.%s.database", config.Get("database.default")))
 
 	instance, err := dbDriver.GetInstance("schema_seeders")
 	if nil != err {

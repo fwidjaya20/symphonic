@@ -1,5 +1,6 @@
 package foundation
 
 type ServiceProvider interface {
-	Boot()
+	Boot(app Application)
+	Register(app Application)
 }

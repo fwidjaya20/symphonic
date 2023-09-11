@@ -2,13 +2,14 @@ package console
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/fwidjaya20/go-framework/contracts/config"
 	"github.com/fwidjaya20/go-framework/contracts/console"
 	"github.com/fwidjaya20/go-framework/utility/file"
 	"github.com/golang-module/carbon/v2"
 	"github.com/gookit/color"
 	"github.com/urfave/cli/v2"
-	"os"
 )
 
 type SeederCommand struct {
@@ -50,5 +51,5 @@ func (cmd *SeederCommand) getFileName(name string) string {
 
 func (cmd *SeederCommand) getPath(name string) string {
 	pwd, _ := os.Getwd()
-	return fmt.Sprintf("%s/%s/seeders/%s", pwd, cmd.config.Env("database.dir", "database"), cmd.getFileName(name))
+	return fmt.Sprintf("%s/%s/seeders/%s", pwd, cmd.config.Get("database.dir", "database"), cmd.getFileName(name))
 }

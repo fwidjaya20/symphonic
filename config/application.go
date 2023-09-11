@@ -4,6 +4,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/spf13/cast"
 	"github.com/spf13/viper"
 )
 
@@ -36,7 +37,7 @@ func (app *Application) Add(name string, configuration any) {
 	app.viper.Set(name, configuration)
 }
 
-func (app *Application) Env(name string, defaultValue ...any) any {
+func (app *Application) Get(name string, defaultValue ...any) any {
 	if app.viper.IsSet(name) {
 		return app.viper.Get(name)
 	}
@@ -46,6 +47,10 @@ func (app *Application) Env(name string, defaultValue ...any) any {
 	}
 
 	return nil
+}
+
+func (app *Application) GetString(name string, defaultValue ...string) string {
+	return cast.ToString(app.Get(name, defaultValue))
 }
 
 func (app *Application) Inspect() any {

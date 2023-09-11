@@ -2,13 +2,14 @@ package console
 
 import (
 	"fmt"
+	"os"
+
 	"github.com/fwidjaya20/go-framework/contracts/config"
 	"github.com/fwidjaya20/go-framework/contracts/console"
 	"github.com/fwidjaya20/go-framework/utility/file"
 	"github.com/golang-module/carbon/v2"
 	"github.com/gookit/color"
 	"github.com/urfave/cli/v2"
-	"os"
 )
 
 type MigrationCommand struct {
@@ -50,5 +51,5 @@ func (cmd *MigrationCommand) getFileName(name string, category string) string {
 
 func (cmd *MigrationCommand) getPath(name string, category string) string {
 	pwd, _ := os.Getwd()
-	return fmt.Sprintf("%s/%s/migrations/%s", pwd, cmd.config.Env("database.dir", "database"), cmd.getFileName(name, category))
+	return fmt.Sprintf("%s/%s/migrations/%s", pwd, cmd.config.Get("database.dir", "database"), cmd.getFileName(name, category))
 }
