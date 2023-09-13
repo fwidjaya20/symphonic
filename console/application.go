@@ -1,7 +1,6 @@
 package console
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/fwidjaya20/go-framework/contracts/console"
@@ -37,8 +36,6 @@ func (a *Application) Register(commands []console.Command) {
 }
 
 func (a *Application) Run(arguments []string, isExitAfterComplete bool) {
-	fmt.Println(arguments)
-
 	if err := a.Engine().Run(arguments); nil != err {
 		panic(err.Error())
 	}
