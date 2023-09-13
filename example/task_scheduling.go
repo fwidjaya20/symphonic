@@ -9,16 +9,14 @@ import (
 	"github.com/fwidjaya20/go-framework/schedule"
 )
 
-func init() {
+func main() {
+	fmt.Println("Task Scheduling")
+
 	foundation.App.GetConfig().Add("app.providers", []ContractFoundation.ServiceProvider{
 		&schedule.ServiceProvider{},
 	})
 
 	foundation.App.Boot()
-}
-
-func main() {
-	fmt.Println("Task Scheduling")
 
 	foundation.App.GetSchedule().Register([]ContractSchedule.Job{
 		schedule.NewJob(Job1).EverySecond(),

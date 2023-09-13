@@ -36,7 +36,20 @@ func (a *Application) Register(commands []console.Command) {
 }
 
 func (a *Application) Run(arguments []string, isExitAfterComplete bool) {
-	if err := a.Engine().Run(arguments); nil != err {
+	artisanIndex := -1
+
+	for i, it := range arguments {
+		if "artisan" == it {
+			artisanIndex = i
+			break
+		}
+	}
+
+	if artisanIndex == -1 {
+		return
+	}
+
+	if err := a.Engine().Run(append([]string{arguments[0]}, arguments[artisanIndex+1:]...)); nil != err {
 		panic(err.Error())
 	}
 
