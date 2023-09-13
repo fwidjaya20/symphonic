@@ -11,6 +11,8 @@ import (
 	ContractConfig "github.com/fwidjaya20/go-framework/contracts/config"
 	ContractConsole "github.com/fwidjaya20/go-framework/contracts/console"
 	"github.com/fwidjaya20/go-framework/contracts/foundation"
+	ContractSchedule "github.com/fwidjaya20/go-framework/contracts/schedule"
+	"github.com/fwidjaya20/go-framework/schedule"
 	"github.com/golang-module/carbon/v2"
 )
 
@@ -85,6 +87,15 @@ func (app *application) GetConsole() ContractConsole.Console {
 		return nil
 	}
 	return instance.(ContractConsole.Console)
+}
+
+func (app *application) GetSchedule() ContractSchedule.Schedule {
+	instance, err := app.Get(schedule.Binding)
+	if nil != err {
+		log.Fatalln(err.Error())
+		return nil
+	}
+	return instance.(ContractSchedule.Schedule)
 }
 
 func (app *application) Singleton(key any, callback func(app foundation.Application) (any, error)) {

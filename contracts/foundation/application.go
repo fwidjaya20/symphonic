@@ -3,6 +3,7 @@ package foundation
 import (
 	"github.com/fwidjaya20/go-framework/contracts/config"
 	"github.com/fwidjaya20/go-framework/contracts/console"
+	"github.com/fwidjaya20/go-framework/contracts/schedule"
 )
 
 type Application interface {
@@ -10,5 +11,6 @@ type Application interface {
 	Get(key any) (any, error)
 	GetConfig() config.Config
 	GetConsole() console.Console
+	GetSchedule() schedule.Schedule
 	Singleton(key any, callback func(app Application) (any, error))
 }
