@@ -24,7 +24,8 @@ func NewSeederCommand(config config.Config) console.Command {
 
 func (cmd *SeederCommand) Setup() *cli.Command {
 	return &cli.Command{
-		Name:        "seeder",
+		Name:        "make:seeder",
+		Category:    "make",
 		Description: "Create database seeder file",
 		Action:      cmd.Handle,
 	}

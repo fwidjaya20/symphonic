@@ -24,7 +24,8 @@ func NewMigrationCommand(config config.Config) console.Command {
 
 func (cmd *MigrationCommand) Setup() *cli.Command {
 	return &cli.Command{
-		Name:        "migration",
+		Name:        "make:migration",
+		Category:    "make",
 		Description: "Create database migration file",
 		Action:      cmd.Handle,
 	}
