@@ -2,17 +2,17 @@ package main
 
 import (
 	ContractFoundation "github.com/fwidjaya20/go-framework/contracts/foundation"
-	"github.com/fwidjaya20/go-framework/foundation"
+	"github.com/fwidjaya20/go-framework/facades"
 	"github.com/fwidjaya20/go-framework/log"
 )
 
 func main() {
-	foundation.App.GetConfig().Add("app.providers", []ContractFoundation.ServiceProvider{
+	facades.Config().Add("app.providers", []ContractFoundation.ServiceProvider{
 		&log.ServiceProvider{},
 	})
 
-	foundation.App.Boot()
+	facades.App().Boot()
 
-	foundation.App.GetLogger().Debug("Example Log")
-	foundation.App.GetLogger().Debugf("%s", "Example Log")
+	facades.Logger().Debug("Example Log")
+	facades.Logger().Debugf("%s", "Example Log")
 }

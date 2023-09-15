@@ -5,26 +5,24 @@ import (
 
 	ContractFoundation "github.com/fwidjaya20/go-framework/contracts/foundation"
 	ContractSchedule "github.com/fwidjaya20/go-framework/contracts/schedule"
-	"github.com/fwidjaya20/go-framework/foundation"
+	"github.com/fwidjaya20/go-framework/facades"
 	"github.com/fwidjaya20/go-framework/schedule"
 )
 
 func main() {
-	fmt.Println("Task Scheduling")
-
-	foundation.App.GetConfig().Add("app.providers", []ContractFoundation.ServiceProvider{
+	facades.Config().Add("app.providers", []ContractFoundation.ServiceProvider{
 		&schedule.ServiceProvider{},
 	})
 
-	foundation.App.Boot()
+	facades.App().Boot()
 
-	foundation.App.GetSchedule().Register([]ContractSchedule.Job{
+	facades.Schedule().Register([]ContractSchedule.Job{
 		schedule.NewJob(Job1).EverySecond(),
 		schedule.NewJob(Job2).EveryTwoSecond(),
 		schedule.NewJob(Job3).EveryThreeSecond(),
 	})
 
-	foundation.App.GetSchedule().Run()
+	facades.Schedule().Run()
 
 	select {}
 }

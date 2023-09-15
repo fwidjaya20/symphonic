@@ -22,13 +22,13 @@ var (
 	App foundation.Application
 )
 
-type application struct {
+type _Application struct {
 	bindings  sync.Map
 	instances sync.Map
 }
 
 func init() {
-	app := &application{}
+	app := &_Application{}
 
 	baseServiceProvider := app.getBaseServiceProvider()
 
@@ -42,7 +42,7 @@ func NewApplication() foundation.Application {
 	return App
 }
 
-func (app *application) Boot() {
+func (app *_Application) Boot() {
 	configuredServiceProviders := app.GetConfig().Get("app.providers").([]foundation.ServiceProvider)
 	configuredTz := app.GetConfig().GetString("app.timezone", carbon.UTC)
 
@@ -53,7 +53,7 @@ func (app *application) Boot() {
 	carbon.SetTimezone(configuredTz)
 }
 
-func (app *application) Get(key any) (any, error) {
+func (app *_Application) Get(key any) (any, error) {
 	binding, ok := app.bindings.Load(key)
 	if !ok {
 		return nil, fmt.Errorf("binding was not found: %+v", key)
@@ -73,7 +73,7 @@ func (app *application) Get(key any) (any, error) {
 	return bindingImpl, nil
 }
 
-func (app *application) GetConfig() ContractConfig.Config {
+func (app *_Application) GetConfig() ContractConfig.Config {
 	instance, err := app.Get(config.Binding)
 	if nil != err {
 		SysLog.Fatalln(err.Error())
@@ -82,7 +82,7 @@ func (app *application) GetConfig() ContractConfig.Config {
 	return instance.(ContractConfig.Config)
 }
 
-func (app *application) GetConsole() ContractConsole.Console {
+func (app *_Application) GetConsole() ContractConsole.Console {
 	instance, err := app.Get(console.Binding)
 	if nil != err {
 		SysLog.Fatalln(err.Error())
@@ -91,7 +91,7 @@ func (app *application) GetConsole() ContractConsole.Console {
 	return instance.(ContractConsole.Console)
 }
 
-func (app *application) GetLogger() ContractLog.Logger {
+func (app *_Application) GetLogger() ContractLog.Logger {
 	instance, err := app.Get(log.Binding)
 	if nil != err {
 		SysLog.Fatalln(err.Error())
@@ -100,7 +100,7 @@ func (app *application) GetLogger() ContractLog.Logger {
 	return instance.(ContractLog.Logger)
 }
 
-func (app *application) GetSchedule() ContractSchedule.Schedule {
+func (app *_Application) GetSchedule() ContractSchedule.Schedule {
 	instance, err := app.Get(schedule.Binding)
 	if nil != err {
 		SysLog.Fatalln(err.Error())
@@ -109,24 +109,24 @@ func (app *application) GetSchedule() ContractSchedule.Schedule {
 	return instance.(ContractSchedule.Schedule)
 }
 
-func (app *application) Singleton(key any, callback func(app foundation.Application) (any, error)) {
+func (app *_Application) Singleton(key any, callback func(app foundation.Application) (any, error)) {
 	app.bindings.Store(key, callback)
 }
 
-func (app *application) bootServiceProviders(providers []foundation.ServiceProvider) {
+func (app *_Application) bootServiceProviders(providers []foundation.ServiceProvider) {
 	for _, it := range providers {
 		it.Boot(app)
 	}
 }
 
-func (app *application) getBaseServiceProvider() []foundation.ServiceProvider {
+func (app *_Application) getBaseServiceProvider() []foundation.ServiceProvider {
 	return []foundation.ServiceProvider{
 		&config.ServiceProvider{},
 		&console.ServiceProvider{},
 	}
 }
 
-func (app *application) registerServiceProviders(providers []foundation.ServiceProvider) {
+func (app *_Application) registerServiceProviders(providers []foundation.ServiceProvider) {
 	for _, it := range providers {
 		it.Register(app)
 	}

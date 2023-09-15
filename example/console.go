@@ -3,30 +3,30 @@ package main
 import (
 	ContractFoundation "github.com/fwidjaya20/go-framework/contracts/foundation"
 	"github.com/fwidjaya20/go-framework/database"
-	"github.com/fwidjaya20/go-framework/foundation"
+	"github.com/fwidjaya20/go-framework/facades"
 	"github.com/golang-module/carbon/v2"
 )
 
 func main() {
-	foundation.App.GetConfig().Add("app.providers", []ContractFoundation.ServiceProvider{
+	facades.Config().Add("app.providers", []ContractFoundation.ServiceProvider{
 		&database.ServiceProvider{},
 	})
 
-	foundation.App.GetConfig().Add("database", map[string]any{
+	facades.Config().Add("database", map[string]any{
 		"connections": map[string]any{
 			"postgresql": map[string]any{
 				"driver":   "postgresql",
-				"host":     foundation.App.GetConfig().Get("DB_HOST", "127.0.0.1"),
-				"port":     foundation.App.GetConfig().Get("DB_PORT", 5432),
-				"database": foundation.App.GetConfig().Get("DB_DATABASE", "forge"),
-				"username": foundation.App.GetConfig().Get("DB_USERNAME", ""),
-				"password": foundation.App.GetConfig().Get("DB_PASSWORD", ""),
+				"host":     facades.Config().Get("DB_HOST", "127.0.0.1"),
+				"port":     facades.Config().Get("DB_PORT", 5432),
+				"database": facades.Config().Get("DB_DATABASE", "forge"),
+				"username": facades.Config().Get("DB_USERNAME", ""),
+				"password": facades.Config().Get("DB_PASSWORD", ""),
 			},
 		},
-		"default":  foundation.App.GetConfig().Get("DB_CONNECTION", "postgresql"),
+		"default":  facades.Config().Get("DB_CONNECTION", "postgresql"),
 		"dir":      "./out/database",
 		"timezone": carbon.UTC,
 	})
 
-	foundation.App.Boot()
+	facades.App().Boot()
 }
