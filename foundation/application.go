@@ -2,7 +2,7 @@ package foundation
 
 import (
 	"fmt"
-	"log"
+	SysLog "log"
 	"os"
 	"sync"
 
@@ -11,7 +11,9 @@ import (
 	ContractConfig "github.com/fwidjaya20/go-framework/contracts/config"
 	ContractConsole "github.com/fwidjaya20/go-framework/contracts/console"
 	"github.com/fwidjaya20/go-framework/contracts/foundation"
+	ContractLog "github.com/fwidjaya20/go-framework/contracts/log"
 	ContractSchedule "github.com/fwidjaya20/go-framework/contracts/schedule"
+	"github.com/fwidjaya20/go-framework/log"
 	"github.com/fwidjaya20/go-framework/schedule"
 	"github.com/golang-module/carbon/v2"
 )
@@ -74,7 +76,7 @@ func (app *application) Get(key any) (any, error) {
 func (app *application) GetConfig() ContractConfig.Config {
 	instance, err := app.Get(config.Binding)
 	if nil != err {
-		log.Fatalln(err.Error())
+		SysLog.Fatalln(err.Error())
 		return nil
 	}
 	return instance.(ContractConfig.Config)
@@ -83,16 +85,25 @@ func (app *application) GetConfig() ContractConfig.Config {
 func (app *application) GetConsole() ContractConsole.Console {
 	instance, err := app.Get(console.Binding)
 	if nil != err {
-		log.Fatalln(err.Error())
+		SysLog.Fatalln(err.Error())
 		return nil
 	}
 	return instance.(ContractConsole.Console)
 }
 
+func (app *application) GetLogger() ContractLog.Logger {
+	instance, err := app.Get(log.Binding)
+	if nil != err {
+		SysLog.Fatalln(err.Error())
+		return nil
+	}
+	return instance.(ContractLog.Logger)
+}
+
 func (app *application) GetSchedule() ContractSchedule.Schedule {
 	instance, err := app.Get(schedule.Binding)
 	if nil != err {
-		log.Fatalln(err.Error())
+		SysLog.Fatalln(err.Error())
 		return nil
 	}
 	return instance.(ContractSchedule.Schedule)
