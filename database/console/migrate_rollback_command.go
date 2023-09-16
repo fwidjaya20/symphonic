@@ -3,8 +3,8 @@ package console
 import (
 	"errors"
 
-	"github.com/fwidjaya20/go-framework/contracts/config"
-	"github.com/fwidjaya20/go-framework/contracts/console"
+	"github.com/fwidjaya20/symphonic/contracts/config"
+	"github.com/fwidjaya20/symphonic/contracts/console"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/gookit/color"
 	"github.com/urfave/cli/v2"

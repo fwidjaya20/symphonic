@@ -1,7 +1,7 @@
 package schedule
 
 import (
-	"github.com/fwidjaya20/go-framework/contracts/foundation"
+	"github.com/fwidjaya20/symphonic/contracts/foundation"
 )
 
 const Binding = "go_framework.schedule"

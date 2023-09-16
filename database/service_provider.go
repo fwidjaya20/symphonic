@@ -1,9 +1,9 @@
 package database
 
 import (
-	ContractConsole "github.com/fwidjaya20/go-framework/contracts/console"
-	"github.com/fwidjaya20/go-framework/contracts/foundation"
-	"github.com/fwidjaya20/go-framework/database/console"
+	ContractConsole "github.com/fwidjaya20/symphonic/contracts/console"
+	"github.com/fwidjaya20/symphonic/contracts/foundation"
+	"github.com/fwidjaya20/symphonic/database/console"
 )
 
 const Binding = "go_framework.database"

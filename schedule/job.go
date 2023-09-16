@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/fwidjaya20/go-framework/contracts/schedule"
+	"github.com/fwidjaya20/symphonic/contracts/schedule"
 )
 
 type Job struct {

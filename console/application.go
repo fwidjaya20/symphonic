@@ -3,7 +3,7 @@ package console
 import (
 	"os"
 
-	"github.com/fwidjaya20/go-framework/contracts/console"
+	"github.com/fwidjaya20/symphonic/contracts/console"
 	"github.com/urfave/cli/v2"
 )
 

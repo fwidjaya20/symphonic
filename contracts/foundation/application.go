@@ -1,10 +1,10 @@
 package foundation
 
 import (
-	"github.com/fwidjaya20/go-framework/contracts/config"
-	"github.com/fwidjaya20/go-framework/contracts/console"
-	"github.com/fwidjaya20/go-framework/contracts/log"
-	"github.com/fwidjaya20/go-framework/contracts/schedule"
+	"github.com/fwidjaya20/symphonic/contracts/config"
+	"github.com/fwidjaya20/symphonic/contracts/console"
+	"github.com/fwidjaya20/symphonic/contracts/log"
+	"github.com/fwidjaya20/symphonic/contracts/schedule"
 )
 
 type Application interface {

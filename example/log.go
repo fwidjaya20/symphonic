@@ -1,9 +1,9 @@
 package main
 
 import (
-	ContractFoundation "github.com/fwidjaya20/go-framework/contracts/foundation"
-	"github.com/fwidjaya20/go-framework/facades"
-	"github.com/fwidjaya20/go-framework/log"
+	ContractFoundation "github.com/fwidjaya20/symphonic/contracts/foundation"
+	"github.com/fwidjaya20/symphonic/facades"
+	"github.com/fwidjaya20/symphonic/log"
 )
 
 func main() {

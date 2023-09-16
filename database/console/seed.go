@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fwidjaya20/go-framework/constant"
-	"github.com/fwidjaya20/go-framework/contracts/config"
-	"github.com/fwidjaya20/go-framework/database/driver"
+	"github.com/fwidjaya20/symphonic/constant"
+	"github.com/fwidjaya20/symphonic/contracts/config"
+	"github.com/fwidjaya20/symphonic/database/driver"
 	"github.com/golang-migrate/migrate/v4"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 )

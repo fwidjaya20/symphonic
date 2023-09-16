@@ -1,9 +1,9 @@
 package main
 
 import (
-	ContractFoundation "github.com/fwidjaya20/go-framework/contracts/foundation"
-	"github.com/fwidjaya20/go-framework/database"
-	"github.com/fwidjaya20/go-framework/facades"
+	ContractFoundation "github.com/fwidjaya20/symphonic/contracts/foundation"
+	"github.com/fwidjaya20/symphonic/database"
+	"github.com/fwidjaya20/symphonic/facades"
 	"github.com/golang-module/carbon/v2"
 )
 

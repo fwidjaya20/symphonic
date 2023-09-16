@@ -3,10 +3,10 @@ package main
 import (
 	"fmt"
 
-	ContractFoundation "github.com/fwidjaya20/go-framework/contracts/foundation"
-	ContractSchedule "github.com/fwidjaya20/go-framework/contracts/schedule"
-	"github.com/fwidjaya20/go-framework/facades"
-	"github.com/fwidjaya20/go-framework/schedule"
+	ContractFoundation "github.com/fwidjaya20/symphonic/contracts/foundation"
+	ContractSchedule "github.com/fwidjaya20/symphonic/contracts/schedule"
+	"github.com/fwidjaya20/symphonic/facades"
+	"github.com/fwidjaya20/symphonic/schedule"
 )
 
 func main() {

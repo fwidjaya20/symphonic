@@ -1,6 +1,6 @@
 package log
 
-import "github.com/fwidjaya20/go-framework/contracts/foundation"
+import "github.com/fwidjaya20/symphonic/contracts/foundation"
 
 const Binding = "go_framework.log"
 

@@ -3,7 +3,7 @@ package log
 import (
 	"os"
 
-	"github.com/fwidjaya20/go-framework/contracts/log"
+	"github.com/fwidjaya20/symphonic/contracts/log"
 	"github.com/sirupsen/logrus"
 )
 
@@ -28,49 +28,49 @@ func NewApplication() log.Logger {
 }
 
 func (a *Application) Debug(args ...any) {
-	a.instance.Debug(args)
+	a.instance.Debug(args...)
 }
 
 func (a *Application) Debugf(format string, args ...any) {
-	a.instance.Debugf(format, args)
+	a.instance.Debugf(format, args...)
 }
 
 func (a *Application) Error(args ...any) {
-	a.instance.Error(args)
+	a.instance.Error(args...)
 }
 
 func (a *Application) Errorf(format string, args ...any) {
-	a.instance.Errorf(format, args)
+	a.instance.Errorf(format, args...)
 }
 
 func (a *Application) Fatal(args ...any) {
-	a.instance.Fatal(args)
+	a.instance.Fatal(args...)
 }
 
 func (a *Application) Fatalf(format string, args ...any) {
-	a.instance.Fatalf(format, args)
+	a.instance.Fatalf(format, args...)
 }
 
 func (a *Application) Info(args ...any) {
-	a.instance.Info(args)
+	a.instance.Info(args...)
 }
 
 func (a *Application) Infof(format string, args ...any) {
-	a.instance.Infof(format, args)
+	a.instance.Infof(format, args...)
 }
 
 func (a *Application) Panic(args ...any) {
-	a.instance.Panic(args)
+	a.instance.Panic(args...)
 }
 
 func (a *Application) Panicf(format string, args ...any) {
-	a.instance.Panicf(format, args)
+	a.instance.Panicf(format, args...)
 }
 
 func (a *Application) Warning(args ...any) {
-	a.instance.Warning(args)
+	a.instance.Warning(args...)
 }
 
 func (a *Application) Warningf(format string, args ...any) {
-	a.instance.Warningf(format, args)
+	a.instance.Warningf(format, args...)
 }

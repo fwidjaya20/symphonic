@@ -1,8 +1,8 @@
 package facades
 
 import (
-	ContractFoundation "github.com/fwidjaya20/go-framework/contracts/foundation"
-	"github.com/fwidjaya20/go-framework/foundation"
+	ContractFoundation "github.com/fwidjaya20/symphonic/contracts/foundation"
+	"github.com/fwidjaya20/symphonic/foundation"
 )
 
 func App() ContractFoundation.Application {

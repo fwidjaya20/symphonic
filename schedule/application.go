@@ -3,7 +3,7 @@ package schedule
 import (
 	"log"
 
-	"github.com/fwidjaya20/go-framework/contracts/schedule"
+	"github.com/fwidjaya20/symphonic/contracts/schedule"
 	"github.com/robfig/cron/v3"
 )
 
