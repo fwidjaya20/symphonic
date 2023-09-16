@@ -11,7 +11,7 @@ type ServiceProvider struct{}
 func (provider *ServiceProvider) Boot(app foundation.Application) {}
 
 func (provider *ServiceProvider) Register(app foundation.Application) {
-	app.Singleton(Binding, func(app foundation.Application) (any, error) {
+	app.Instance(Binding, func(app foundation.Application) (any, error) {
 		return NewApplication(), nil
 	})
 }

@@ -14,5 +14,5 @@ type Application interface {
 	GetConsole() console.Console
 	GetLogger() log.Logger
 	GetSchedule() schedule.Schedule
-	Singleton(key any, callback func(app Application) (any, error))
+	Instance(key any, callback func(app Application) (any, error))
 }

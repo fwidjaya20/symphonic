@@ -25,7 +25,7 @@ func (provider *ServiceProvider) Register(app foundation.Application) {
 		console.NewSeederCommand(config),
 	})
 
-	app.Singleton(Binding, func(app foundation.Application) (any, error) {
+	app.Instance(Binding, func(app foundation.Application) (any, error) {
 		return &ServiceProvider{}, nil
 	})
 }

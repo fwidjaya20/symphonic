@@ -109,7 +109,7 @@ func (app *_Application) GetSchedule() ContractSchedule.Schedule {
 	return instance.(ContractSchedule.Schedule)
 }
 
-func (app *_Application) Singleton(key any, callback func(app foundation.Application) (any, error)) {
+func (app *_Application) Instance(key any, callback func(app foundation.Application) (any, error)) {
 	app.bindings.Store(key, callback)
 }
 
