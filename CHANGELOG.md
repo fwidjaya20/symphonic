@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support `Config` feature.
 - Support `Console` feature.
 - Support `Database` feature.
+- Support `Event` feature.
 - Support `Log` feature.
 - Support `Schedule` feature.
 
