@@ -3,6 +3,7 @@ package foundation
 import (
 	"github.com/fwidjaya20/symphonic/contracts/config"
 	"github.com/fwidjaya20/symphonic/contracts/console"
+	"github.com/fwidjaya20/symphonic/contracts/event"
 	"github.com/fwidjaya20/symphonic/contracts/log"
 	"github.com/fwidjaya20/symphonic/contracts/schedule"
 )
@@ -12,6 +13,7 @@ type Application interface {
 	Get(key any) (any, error)
 	GetConfig() config.Config
 	GetConsole() console.Console
+	GetEvent() event.Event
 	GetLogger() log.Logger
 	GetSchedule() schedule.Schedule
 	Instance(key any, callback func(app Application) (any, error))

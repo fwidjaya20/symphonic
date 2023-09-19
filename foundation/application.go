@@ -10,9 +10,11 @@ import (
 	"github.com/fwidjaya20/symphonic/console"
 	ContractConfig "github.com/fwidjaya20/symphonic/contracts/config"
 	ContractConsole "github.com/fwidjaya20/symphonic/contracts/console"
+	ContractEvent "github.com/fwidjaya20/symphonic/contracts/event"
 	"github.com/fwidjaya20/symphonic/contracts/foundation"
 	ContractLog "github.com/fwidjaya20/symphonic/contracts/log"
 	ContractSchedule "github.com/fwidjaya20/symphonic/contracts/schedule"
+	"github.com/fwidjaya20/symphonic/event"
 	"github.com/fwidjaya20/symphonic/log"
 	"github.com/fwidjaya20/symphonic/schedule"
 	"github.com/golang-module/carbon/v2"
@@ -89,6 +91,15 @@ func (app *_Application) GetConsole() ContractConsole.Console {
 		return nil
 	}
 	return instance.(ContractConsole.Console)
+}
+
+func (app *_Application) GetEvent() ContractEvent.Event {
+	instance, err := app.Get(event.Binding)
+	if nil != err {
+		SysLog.Fatalln(err.Error())
+		return nil
+	}
+	return instance.(ContractEvent.Event)
 }
 
 func (app *_Application) GetLogger() ContractLog.Logger {
