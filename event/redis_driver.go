@@ -52,8 +52,6 @@ func (r *RedisDriver) Subscribe(c context.Context) error {
 	stream := r.connection.Subscribe(c, r.Job.Signature())
 	defer stream.Close()
 
-	typeOfJob := reflect.TypeOf(r.Job)
-
 	for {
 		msg, err := stream.ReceiveMessage(c)
 		if nil != err {
@@ -61,7 +59,7 @@ func (r *RedisDriver) Subscribe(c context.Context) error {
 			continue
 		}
 
-		jobInstance := reflect.New(typeOfJob).Interface()
+		jobInstance := reflect.New(reflect.TypeOf(r.Job)).Interface().(ContractEvent.Job)
 
 		if err = json.Unmarshal([]byte(msg.Payload), jobInstance); nil != err {
 			r.Logger.Infof("Error unmarshalling payload: %v\n", err.Error())
@@ -69,22 +67,8 @@ func (r *RedisDriver) Subscribe(c context.Context) error {
 		}
 
 		for _, listener := range r.Listeners {
-			handleMethod := reflect.ValueOf(listener).MethodByName("Handle")
-
-			if !handleMethod.IsValid() {
-				r.Logger.Error("Handle method not found on listener")
-				continue
-			}
-
-			if handleMethod.Type().NumIn() != 1 {
-				r.Logger.Error("Handle method has an unexpected number of parameters\n")
-				continue
-			}
-
-			result := handleMethod.Call([]reflect.Value{reflect.ValueOf(jobInstance)})
-
-			if nil != result[0].Interface() {
-				r.Logger.Errorf("Error calling Handle method: %v\n", result[0].Interface())
+			if err = listener.Handle(jobInstance); nil != err {
+				r.Logger.Errorf("Error calling Handle method: %v\n", err.Error())
 			}
 		}
 	}

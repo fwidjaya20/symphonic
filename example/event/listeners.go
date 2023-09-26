@@ -9,7 +9,8 @@ import (
 type CalculateAuthorStatistic struct{}
 
 func (l *CalculateAuthorStatistic) Handle(e ContractEvent.Job) error {
-	fmt.Println(l.Signature(), e.GetPayload())
+	payload := e.GetPayload().(PostCreated)
+	fmt.Println(l.Signature(), payload)
 	return nil
 }
 
@@ -19,11 +20,12 @@ func (l *CalculateAuthorStatistic) Signature() string {
 
 type SendNewsletterNotification struct{}
 
-func (l *SendNewsletterNotification) Handle(e ContractEvent.Job) error {
-	fmt.Println(l.Signature(), e.GetPayload())
+func (l SendNewsletterNotification) Handle(e ContractEvent.Job) error {
+	payload := e.GetPayload().(PostCreated)
+	fmt.Println(l.Signature(), payload)
 	return nil
 }
 
-func (l *SendNewsletterNotification) Signature() string {
+func (l SendNewsletterNotification) Signature() string {
 	return "Send Newsletter Notification"
 }
