@@ -17,5 +17,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support `Event` feature.
 - Support `Log` feature.
 - Support `Schedule` feature.
+- Support `Queue` feature
 
+### [1.1.0] - 2023-09-26
+
+### Added
+
+- Support `Queue` feature with `Sync` and `Redis` drivers.
+
+[1.1.0]: https://github.com/fwidjaya20/symphonic/releases/tag/v1.1.0
 [1.0.0]: https://github.com/fwidjaya20/symphonic/releases/tag/v1.0.0
