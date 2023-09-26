@@ -1,18 +1,20 @@
 package main
 
 import (
-	"log"
+	SysLog "log"
 	"time"
 
 	ContractFoundation "github.com/fwidjaya20/symphonic/contracts/foundation"
 	"github.com/fwidjaya20/symphonic/event"
 	ExampleEvent "github.com/fwidjaya20/symphonic/example/event"
 	"github.com/fwidjaya20/symphonic/facades"
+	"github.com/fwidjaya20/symphonic/log"
 )
 
 func main() {
 	facades.Config().Add("app.providers", []ContractFoundation.ServiceProvider{
 		&event.ServiceProvider{},
+		&log.ServiceProvider{},
 	})
 
 	facades.App().Boot()
@@ -26,6 +28,6 @@ func main() {
 		Author:    "Fredrick Widjaya",
 		CreatedAt: time.Now(),
 	}).Publish(); nil != err {
-		log.Fatalln(err.Error())
+		SysLog.Fatalln(err.Error())
 	}
 }

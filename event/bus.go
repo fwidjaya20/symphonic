@@ -4,48 +4,71 @@ import (
 	"fmt"
 	"sync"
 
+	"github.com/fwidjaya20/symphonic/contracts/config"
 	"github.com/fwidjaya20/symphonic/contracts/event"
+	"github.com/fwidjaya20/symphonic/contracts/log"
 )
 
 type Bus struct {
-	event     event.Job
-	listeners []event.Listener
-	locker    sync.Mutex
+	connection string
+	config     config.Config
+	driver     event.QueueDriver
+	event      event.Job
+	isQueued   bool
+	listeners  []event.Listener
+	locker     sync.Mutex
+	logger     log.Logger
 }
 
-func NewEventBus(event event.Job, listeners []event.Listener) event.Bus {
-	return &Bus{
-		event:     event,
-		listeners: listeners,
+func NewEventBus(config config.Config, event event.Job, listeners []event.Listener, logger log.Logger) event.Bus {
+	connection := config.GetString("queue.default", DriverSync)
+
+	bus := &Bus{
+		connection: connection,
+		config:     config,
+		event:      event,
+		listeners:  listeners,
+		logger:     logger,
+	}
+
+	bus.determineDriver(connection)
+	bus.determineQueue(connection)
+
+	return bus
+}
+
+func (b *Bus) OnConnection(driver string) event.Bus {
+	b.determineDriver(driver)
+	b.determineQueue(driver)
+	b.connection = driver
+	return b
+}
+
+func (b *Bus) Publish() error {
+	b.locker.Lock()
+	defer b.locker.Unlock()
+
+	if len(b.listeners) < 1 {
+		return fmt.Errorf("event '%s' doesn't bind any listeners", b.event.Signature())
+	}
+
+	return b.driver.Publish()
+}
+
+func (b *Bus) determineQueue(driver string) {
+	switch driver {
+	case DriverSync:
+		b.isQueued = false
+	default:
+		b.isQueued = true
 	}
 }
 
-func (t *Bus) Publish() error {
-	t.locker.Lock()
-	defer t.locker.Unlock()
-
-	if len(t.listeners) < 1 {
-		return fmt.Errorf("event '%s' doesn't bind any listeners", t.event.Signature())
-	}
-
-	var errors []error
-	var mu sync.Mutex
-	var wg sync.WaitGroup
-
-	wg.Add(len(t.listeners))
-
-	for _, listener := range t.listeners {
-		go func(callback event.Listener) {
-			defer wg.Done()
-			if err := callback.Handle(t.event); nil != err {
-				mu.Lock()
-				defer mu.Unlock()
-				errors = append(errors, err)
-			}
-		}(listener)
-	}
-
-	wg.Wait()
-
-	return nil
+func (b *Bus) determineDriver(driver string) {
+	b.driver = GetQueueDriver(driver, event.DriverArgs{
+		Config:    b.config,
+		Job:       b.event,
+		Listeners: b.listeners,
+		Logger:    b.logger,
+	})
 }
