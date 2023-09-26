@@ -6,7 +6,7 @@ import (
 	"github.com/fwidjaya20/symphonic/database/console"
 )
 
-const Binding = "go_framework.database"
+const Binding = "symphonic.database"
 
 type ServiceProvider struct{}
 

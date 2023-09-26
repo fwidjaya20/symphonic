@@ -2,7 +2,7 @@ package log
 
 import "github.com/fwidjaya20/symphonic/contracts/foundation"
 
-const Binding = "go_framework.log"
+const Binding = "symphonic.log"
 
 type ServiceProvider struct{}
 

@@ -4,7 +4,7 @@ import (
 	"github.com/fwidjaya20/symphonic/contracts/foundation"
 )
 
-const Binding = "go_framework.schedule"
+const Binding = "symphonic.schedule"
 
 type ServiceProvider struct{}
 

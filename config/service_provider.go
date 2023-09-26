@@ -4,7 +4,7 @@ import (
 	"github.com/fwidjaya20/symphonic/contracts/foundation"
 )
 
-const Binding = "go_framework.config"
+const Binding = "symphonic.config"
 
 type ServiceProvider struct{}
 
