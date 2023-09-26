@@ -12,11 +12,20 @@ import (
 
 type RedisDriver struct {
 	ContractEvent.DriverArgs
+
+	connection *redis.Client
 }
 
 func NewRedisDriver(args ContractEvent.DriverArgs) ContractEvent.QueueDriver {
 	return &RedisDriver{
-		args,
+		DriverArgs: args,
+		connection: redis.NewClient(&redis.Options{
+			Addr: fmt.Sprintf(
+				"%s:%s",
+				args.Config.GetString("queue.connections.redis.host"),
+				args.Config.GetString("queue.connections.redis.port"),
+			),
+		}),
 	}
 }
 
@@ -25,14 +34,12 @@ func (r *RedisDriver) Driver() string {
 }
 
 func (r *RedisDriver) Publish() error {
-	client := r.getConnection()
-
 	payload, err := json.Marshal(r.Job.GetPayload())
 	if nil != err {
 		return err
 	}
 
-	if err = client.Publish(context.Background(), r.Job.Signature(), payload).Err(); nil != err {
+	if err = r.connection.Publish(context.Background(), r.Job.Signature(), payload).Err(); nil != err {
 		return err
 	}
 
@@ -42,15 +49,13 @@ func (r *RedisDriver) Publish() error {
 }
 
 func (r *RedisDriver) Subscribe(c context.Context) error {
-	client := r.getConnection()
-
-	stream := client.Subscribe(context.Background(), r.Job.Signature())
+	stream := r.connection.Subscribe(c, r.Job.Signature())
 	defer stream.Close()
 
 	typeOfJob := reflect.TypeOf(r.Job)
 
 	for {
-		msg, err := stream.ReceiveMessage(context.Background())
+		msg, err := stream.ReceiveMessage(c)
 		if nil != err {
 			fmt.Printf("Error receiving message: %v\n", err)
 			continue
@@ -83,14 +88,4 @@ func (r *RedisDriver) Subscribe(c context.Context) error {
 			}
 		}
 	}
-}
-
-func (r *RedisDriver) getConnection() *redis.Client {
-	return redis.NewClient(&redis.Options{
-		Addr: fmt.Sprintf(
-			"%s:%s",
-			r.Config.GetString("queue.connections.redis.host"),
-			r.Config.GetString("queue.connections.redis.port"),
-		),
-	})
 }
