@@ -32,8 +32,14 @@ func main() {
 
 	facades.Config().Add("queue", map[string]any{
 		"connections": map[string]any{
-			"kafka":    map[string]any{},
-			"rabbitmq": map[string]any{},
+			"kafka": map[string]any{},
+			"rabbitmq": map[string]any{
+				"protocol": "amqp",
+				"username": "guest",
+				"password": "guest",
+				"host":     "localhost",
+				"port":     "5672",
+			},
 			"redis": map[string]any{
 				"host":     facades.Config().Get("database.connections.redis.host"),
 				"port":     facades.Config().Get("database.connections.redis.port"),
@@ -51,46 +57,29 @@ func main() {
 	facades.Event().Register(kernel.Listen())
 
 	go func() {
+		if err := facades.Event().Run(ContractEvent.RunEvent{
+			Connection: event.DriverRedis,
+			Job:        ExampleEvent.PostCreated{},
+			QueueName:  "symphonic-example-queue",
+		}); nil != err {
+			SysLog.Fatalln(err.Error())
+		}
+	}()
+
+	time.Sleep(5 * time.Second)
+
+	go func() {
 		for i := 1; i <= 3; i++ {
 			time.Sleep(1 * time.Second)
 			if err := facades.Event().Job(&ExampleEvent.PostCreated{
 				Id:        int64(i),
 				Author:    "Fredrick Widjaya",
 				CreatedAt: time.Now(),
-			}).OnConnection("redis").Publish(); nil != err {
+			}).OnConnection(event.DriverRedis).OnQueue("testing-queue").Publish(); nil != err {
 				SysLog.Fatalln(err.Error())
 			}
 		}
 	}()
-
-	go func() {
-		if err := facades.Event().Run(ContractEvent.RunEvent{
-			Connection: event.DriverRedis,
-			Job:        ExampleEvent.PostCreated{},
-		}); nil != err {
-			SysLog.Fatalln(err.Error())
-		}
-	}()
-
-	//go func() {
-	//	client := redis.NewClient(&redis.Options{
-	//		Addr: "localhost:6379", // Update with your Redis server address
-	//	})
-	//
-	//	pubsub := client.Subscribe(context.Background(), ExampleEvent.PostCreated{}.Signature())
-	//	defer pubsub.Close()
-	//
-	//	for {
-	//		msg, err := pubsub.ReceiveMessage(context.Background())
-	//		if err != nil {
-	//			fmt.Printf("Error receiving message: %v\n", err)
-	//			continue
-	//		}
-	//
-	//		// Process the message here
-	//		fmt.Printf("Received: %s\n", msg.Payload)
-	//	}
-	//}()
 
 	select {}
 }

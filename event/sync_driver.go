@@ -50,3 +50,7 @@ func (d *SyncDriver) Subscribe(c context.Context) error {
 	d.Logger.Infof("Running the Sync Driver explicitly is unnecessary and could potentially disrupt system operations.")
 	return nil
 }
+
+func (d *SyncDriver) Flush() error {
+	return nil
+}

@@ -18,6 +18,7 @@ type Bus struct {
 	listeners  []event.Listener
 	locker     sync.Mutex
 	logger     log.Logger
+	queueName  string
 }
 
 func NewEventBus(config config.Config, event event.Job, listeners []event.Listener, logger log.Logger) event.Bus {
@@ -41,6 +42,11 @@ func (b *Bus) OnConnection(driver string) event.Bus {
 	b.determineDriver(driver)
 	b.determineQueue(driver)
 	b.connection = driver
+	return b
+}
+
+func (b *Bus) OnQueue(queueName string) event.Bus {
+	b.queueName = queueName
 	return b
 }
 
@@ -70,5 +76,6 @@ func (b *Bus) determineDriver(driver string) {
 		Job:       b.event,
 		Listeners: b.listeners,
 		Logger:    b.logger,
+		QueueName: b.queueName,
 	})
 }

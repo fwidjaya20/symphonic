@@ -3,9 +3,9 @@ package event
 import "time"
 
 type PostCreated struct {
-	Id        int64
-	Author    string
-	CreatedAt time.Time
+	Id        int64     `json:"id"`
+	Author    string    `json:"author"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func (pc PostCreated) Signature() string {

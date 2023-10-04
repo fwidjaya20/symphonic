@@ -9,6 +9,7 @@ type Event interface {
 
 type Bus interface {
 	OnConnection(connection string) Bus
+	OnQueue(queueName string) Bus
 	Publish() error
 }
 
@@ -17,4 +18,5 @@ type Collection = map[string][]Listener
 type RunEvent struct {
 	Connection string
 	Job        Job
+	QueueName  string
 }

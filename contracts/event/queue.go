@@ -12,10 +12,12 @@ type DriverArgs struct {
 	Job       Job
 	Listeners []Listener
 	Logger    ContractLog.Logger
+	QueueName string
 }
 
 type QueueDriver interface {
 	Driver() string
 	Publish() error
 	Subscribe(c context.Context) error
+	Flush() error
 }

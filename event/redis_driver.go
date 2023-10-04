@@ -73,3 +73,7 @@ func (r *RedisDriver) Subscribe(c context.Context) error {
 		}
 	}
 }
+
+func (r *RedisDriver) Flush() error {
+	return r.connection.Close()
+}

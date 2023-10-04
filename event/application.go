@@ -40,6 +40,7 @@ func (a *Application) Run(config event.RunEvent) error {
 		Job:       config.Job,
 		Listeners: a.Collection()[config.Job.Signature()],
 		Logger:    a.logger,
+		QueueName: config.QueueName,
 	})
 
 	return driver.Subscribe(context.Background())
