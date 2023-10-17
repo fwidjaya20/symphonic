@@ -39,6 +39,10 @@ func (cmd *MigrateRollbackCommand) Setup() *cli.Command {
 func (cmd *MigrateRollbackCommand) Handle(ctx *cli.Context) error {
 	instance, err := getMigrate(cmd.config)
 	if nil != err {
+		if errors.Is(err, ErrEmptyMigrationDir) {
+			color.Yellowln("There is no seeder files yet.")
+			return nil
+		}
 		return err
 	}
 	if nil == instance {

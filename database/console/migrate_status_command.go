@@ -1,6 +1,8 @@
 package console
 
 import (
+	"errors"
+
 	"github.com/fwidjaya20/symphonic/contracts/config"
 	"github.com/fwidjaya20/symphonic/contracts/console"
 	"github.com/gookit/color"
@@ -29,6 +31,10 @@ func (cmd *MigrateStatusCommand) Setup() *cli.Command {
 func (cmd *MigrateStatusCommand) Handle(*cli.Context) error {
 	instance, err := getMigrate(cmd.config)
 	if nil != err {
+		if errors.Is(err, ErrEmptyMigrationDir) {
+			color.Yellowln("There is no seeder files yet.")
+			return nil
+		}
 		return err
 	}
 	if nil == instance {

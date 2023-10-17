@@ -32,6 +32,10 @@ func (cmd *MigrateResetCommand) Setup() *cli.Command {
 func (cmd *MigrateResetCommand) Handle(*cli.Context) error {
 	instance, err := getMigrate(cmd.config)
 	if nil != err {
+		if errors.Is(err, ErrEmptyMigrationDir) {
+			color.Yellowln("There is no migration files yet.")
+			return nil
+		}
 		return err
 	}
 	if nil == instance {
@@ -45,6 +49,10 @@ func (cmd *MigrateResetCommand) Handle(*cli.Context) error {
 
 	instance, err = getSeeder(cmd.config)
 	if nil != err {
+		if errors.Is(err, ErrEmptyMigrationDir) {
+			color.Yellowln("There is no seeder files yet.")
+			return nil
+		}
 		return err
 	}
 	if nil == instance {
