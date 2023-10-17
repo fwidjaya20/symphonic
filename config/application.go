@@ -49,6 +49,26 @@ func (app *Application) Get(name string, defaultValue ...any) any {
 	return nil
 }
 
+func (app *Application) GetInt(name string, defaultValue ...int) int {
+	return cast.ToInt(app.Get(name, defaultValue))
+}
+
+func (app *Application) GetInt8(name string, defaultValue ...int8) int8 {
+	return cast.ToInt8(app.Get(name, defaultValue))
+}
+
+func (app *Application) GetInt16(name string, defaultValue ...int16) int16 {
+	return cast.ToInt16(app.Get(name, defaultValue))
+}
+
+func (app *Application) GetInt32(name string, defaultValue ...int32) int32 {
+	return cast.ToInt32(app.Get(name, defaultValue))
+}
+
+func (app *Application) GetInt64(name string, defaultValue ...int64) int64 {
+	return cast.ToInt64(app.Get(name, defaultValue))
+}
+
 func (app *Application) GetString(name string, defaultValue ...string) string {
 	return cast.ToString(app.Get(name, defaultValue))
 }
