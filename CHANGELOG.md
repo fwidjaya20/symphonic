@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.3] - 2023-11-12
+
+### Added
+
+- Adding `GetArrayString` function on config
+
+## [1.1.2] - 2023-10-17
+
+### Added
+
+- Adding `GetInt`, `GetInt8`, `GetInt16`, `GetInt32`, `GetInt64` function on config.
+
+### Fixed
+
+- Ignore migrations if no migration or seeder files.
+
+## [1.1.1] - 2023-10-04
+
+### Added
+
+- Support `Queue` feature with `RabbitMQ` driver.
+
+## [1.1.0] - 2023-09-26
+
+### Added
+
+- Support `Queue` feature with `Sync` and `Redis` drivers.
+
 ## [1.0.0] - 2023-09-16
 
 ### Added
@@ -19,28 +47,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support `Schedule` feature.
 - Support `Queue` feature
 
-### [1.1.0] - 2023-09-26
-
-### Added
-
-- Support `Queue` feature with `Sync` and `Redis` drivers.
-
-### [1.1.1] - 2023-10-04
-
-### Added
-
-- Support `Queue` feature with `RabbitMQ` driver.
-
-### [1.1.2] - 2023-10-17
-
-### Added
-
-- Adding `GetInt`, `GetInt8`, `GetInt16`, `GetInt32`, `GetInt64` function on config.
-
-### Fixed
-
-- Ignore migrations if no migration or seeder files.
-
+[1.1.3]: https://github.com/fwidjaya20/symphonic/compare/v1.1.2...v1.1.3
 [1.1.2]: https://github.com/fwidjaya20/symphonic/compare/v1.1.1...v1.1.2
 [1.1.1]: https://github.com/fwidjaya20/symphonic/compare/v1.1.0...v1.1.1
 [1.1.0]: https://github.com/fwidjaya20/symphonic/compare/v1.0.0...v1.1.0

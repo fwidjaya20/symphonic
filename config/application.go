@@ -3,6 +3,7 @@ package config
 import (
 	"log"
 	"os"
+	"strings"
 
 	"github.com/spf13/cast"
 	"github.com/spf13/viper"
@@ -71,6 +72,16 @@ func (app *Application) GetInt64(name string, defaultValue ...int64) int64 {
 
 func (app *Application) GetString(name string, defaultValue ...string) string {
 	return cast.ToString(app.Get(name, defaultValue))
+}
+
+func (app *Application) GetArrayString(name string, delimiter string, defaultValues ...string) []string {
+	str := app.GetString(name, "")
+
+	if len(str) == 0 {
+		return defaultValues
+	}
+
+	return cast.ToStringSlice(strings.Split(str, delimiter))
 }
 
 func (app *Application) Inspect() any {
