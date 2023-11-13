@@ -6,6 +6,7 @@ import (
 	"github.com/fwidjaya20/symphonic/contracts/event"
 	"github.com/fwidjaya20/symphonic/contracts/log"
 	"github.com/fwidjaya20/symphonic/contracts/schedule"
+	"gorm.io/gorm"
 )
 
 type Application interface {
@@ -13,6 +14,7 @@ type Application interface {
 	Get(key any) (any, error)
 	GetConfig() config.Config
 	GetConsole() console.Console
+	GetDatabase() *gorm.DB
 	GetEvent() event.Event
 	GetLogger() log.Logger
 	GetSchedule() schedule.Schedule

@@ -1,12 +1,12 @@
-package driver
+package migration
 
 import (
+	"database/sql"
 	"fmt"
-	"log"
 
 	"github.com/fwidjaya20/symphonic/contracts/config"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
+	"github.com/golang-migrate/migrate/v4/database"
+	"github.com/golang-migrate/migrate/v4/database/postgres"
 )
 
 type Pgsql struct {
@@ -30,11 +30,17 @@ func (driver *Pgsql) GetDSN() string {
 	)
 }
 
-func (driver *Pgsql) GetInstance() *gorm.DB {
-	conn, err := gorm.Open(postgres.Open(driver.GetDSN()), &gorm.Config{})
+func (driver *Pgsql) GetInstance(table string) (database.Driver, error) {
+	conn, err := driver.Open()
 	if nil != err {
-		log.Fatalf("can't get db session, got error: %v\n", err)
+		return nil, err
 	}
 
-	return conn
+	return postgres.WithInstance(conn, &postgres.Config{
+		MigrationsTable: table,
+	})
+}
+
+func (driver *Pgsql) Open() (*sql.DB, error) {
+	return sql.Open("postgres", driver.GetDSN())
 }

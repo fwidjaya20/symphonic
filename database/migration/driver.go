@@ -1,15 +1,17 @@
-package driver
+package migration
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/fwidjaya20/symphonic/contracts/config"
-	"gorm.io/gorm"
+	"github.com/golang-migrate/migrate/v4/database"
 )
 
 type DatabaseDriver interface {
 	GetDSN() string
-	GetInstance() *gorm.DB
+	Open() (*sql.DB, error)
+	GetInstance(table string) (database.Driver, error)
 }
 
 func GetDatabaseDriver(config config.Config) DatabaseDriver {

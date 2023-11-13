@@ -10,14 +10,17 @@ import (
 	"github.com/fwidjaya20/symphonic/console"
 	ContractConfig "github.com/fwidjaya20/symphonic/contracts/config"
 	ContractConsole "github.com/fwidjaya20/symphonic/contracts/console"
+	ContractDatabase "github.com/fwidjaya20/symphonic/contracts/database"
 	ContractEvent "github.com/fwidjaya20/symphonic/contracts/event"
 	"github.com/fwidjaya20/symphonic/contracts/foundation"
 	ContractLog "github.com/fwidjaya20/symphonic/contracts/log"
 	ContractSchedule "github.com/fwidjaya20/symphonic/contracts/schedule"
+	"github.com/fwidjaya20/symphonic/database"
 	"github.com/fwidjaya20/symphonic/event"
 	"github.com/fwidjaya20/symphonic/log"
 	"github.com/fwidjaya20/symphonic/schedule"
 	"github.com/golang-module/carbon/v2"
+	"gorm.io/gorm"
 )
 
 var (
@@ -91,6 +94,22 @@ func (app *_Application) GetConsole() ContractConsole.Console {
 		return nil
 	}
 	return instance.(ContractConsole.Console)
+}
+
+func (app *_Application) GetDatabase() *gorm.DB {
+	instance, err := app.Get(database.Binding)
+	if err != nil {
+		SysLog.Fatalln(err.Error())
+		return nil
+	}
+
+	dbInstance, ok := instance.(ContractDatabase.Database)
+	if !ok {
+		SysLog.Fatalln("Instance is not of type ContractDatabase.Database")
+		return nil
+	}
+
+	return dbInstance.GetSession()
 }
 
 func (app *_Application) GetEvent() ContractEvent.Event {

@@ -26,6 +26,6 @@ func (provider *ServiceProvider) Register(app foundation.Application) {
 	})
 
 	app.Instance(Binding, func(app foundation.Application) (any, error) {
-		return &ServiceProvider{}, nil
+		return NewApplication(app.GetConfig()), nil
 	})
 }
