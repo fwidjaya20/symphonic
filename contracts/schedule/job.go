@@ -26,6 +26,9 @@ type Job interface {
 	Hourly() Job
 	HourlyAt(atMinutes ...string) Job
 	Daily() Job
+	DailyAt(atHours ...string) Job
 	Weekly() Job
+	WeeklyAt(atDaysOfWeek ...string) Job
 	Monthly() Job
+	MonthlyAt(atDaysOfMonth ...string) Job
 }
