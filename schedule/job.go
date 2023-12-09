@@ -19,6 +19,9 @@ func NewJob(callback func()) schedule.Job {
 }
 
 func (j *Job) SetTiming(expression string) schedule.Job {
+	if len(strings.Split(expression, " ")) == 5 {
+		expression = "0 " + expression
+	}
 	j.timing = expression
 	return j
 }
