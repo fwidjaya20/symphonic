@@ -1,7 +1,6 @@
 package event
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/fwidjaya20/symphonic/contracts/config"
@@ -53,10 +52,6 @@ func (b *Bus) OnQueue(queueName string) event.Bus {
 func (b *Bus) Publish() error {
 	b.locker.Lock()
 	defer b.locker.Unlock()
-
-	if len(b.listeners) < 1 {
-		return fmt.Errorf("event '%s' doesn't bind any listeners", b.event.Signature())
-	}
 
 	return b.driver.Publish()
 }
