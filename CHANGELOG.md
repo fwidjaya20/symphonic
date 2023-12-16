@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.6] - 2023-12-16
+
+### Changed
+
+- Allow to publish an event without any listeners attached.
+
 ## [1.1.5] - 2023-12-09
 
 ### Added
@@ -63,6 +69,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support `Schedule` feature.
 - Support `Queue` feature
 
+[1.1.6]: https://github.com/fwidjaya20/symphonic/compare/v1.1.4...v1.1.6g
 [1.1.5]: https://github.com/fwidjaya20/symphonic/compare/v1.1.4...v1.1.5
 [1.1.4]: https://github.com/fwidjaya20/symphonic/compare/v1.1.3...v1.1.4
 [1.1.3]: https://github.com/fwidjaya20/symphonic/compare/v1.1.2...v1.1.3
