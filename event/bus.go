@@ -53,6 +53,10 @@ func (b *Bus) Publish() error {
 	b.locker.Lock()
 	defer b.locker.Unlock()
 
+	if len(b.listeners) == 0 {
+		b.logger.Infof("event %s doesn't bind any listeners", b.event.Signature())
+	}
+
 	return b.driver.Publish()
 }
 
