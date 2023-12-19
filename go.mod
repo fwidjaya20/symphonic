@@ -5,6 +5,7 @@ go 1.21.1
 require (
 	github.com/golang-migrate/migrate/v4 v4.16.2
 	github.com/golang-module/carbon/v2 v2.2.6
+	github.com/google/uuid v1.3.0
 	github.com/gookit/color v1.5.4
 	github.com/labstack/gommon v0.4.1
 	github.com/rabbitmq/amqp091-go v1.9.0

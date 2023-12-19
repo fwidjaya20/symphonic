@@ -68,77 +68,77 @@ func (j *Job) EveryThirtySecond() schedule.Job {
 }
 
 func (j *Job) EveryMinute() schedule.Job {
-	return j.SetTiming("0 * * * * *")
+	return j.SetTiming("* * * * *")
 }
 
 func (j *Job) EveryTwoMinute() schedule.Job {
-	return j.SetTiming("0 */2 * * * *")
+	return j.SetTiming("*/2 * * * *")
 }
 
 func (j *Job) EveryThreeMinute() schedule.Job {
-	return j.SetTiming("0 */3 * * * *")
+	return j.SetTiming("*/3 * * * *")
 }
 
 func (j *Job) EveryFourMinute() schedule.Job {
-	return j.SetTiming("0 */4 * * * *")
+	return j.SetTiming("*/4 * * * *")
 }
 
 func (j *Job) EveryFiveMinute() schedule.Job {
-	return j.SetTiming("0 */5 * * * *")
+	return j.SetTiming("*/5 * * * *")
 }
 
 func (j *Job) EveryTenMinute() schedule.Job {
-	return j.SetTiming("0 */10 * * * *")
+	return j.SetTiming("*/10 * * * *")
 }
 
 func (j *Job) EveryFifteenMinute() schedule.Job {
-	return j.SetTiming("0 */15 * * * *")
+	return j.SetTiming("*/15 * * * *")
 }
 
 func (j *Job) EveryThirtyMinute() schedule.Job {
-	return j.SetTiming("0 */30 * * * *")
+	return j.SetTiming("*/30 * * * *")
 }
 
 func (j *Job) Hourly() schedule.Job {
-	return j.SetTiming("0 0 * * * *")
+	return j.SetTiming("0 * * * *")
 }
 
 func (j *Job) HourlyAt(atMinutes ...string) schedule.Job {
 	if len(atMinutes) > 0 {
-		return j.SetTiming(fmt.Sprintf("0 %s * * * *", strings.Join(atMinutes, ",")))
+		return j.SetTiming(fmt.Sprintf("%s * * * *", strings.Join(atMinutes, ",")))
 	}
 	return j.Hourly()
 }
 
 func (j *Job) Daily() schedule.Job {
-	return j.SetTiming("0 0 0 * * *")
+	return j.SetTiming("0 0 * * *")
 }
 
 func (j *Job) DailyAt(atHours ...string) schedule.Job {
 	if len(atHours) > 0 {
-		return j.SetTiming(fmt.Sprintf("0 0 %s * * *", strings.Join(atHours, ",")))
+		return j.SetTiming(fmt.Sprintf("0 %s * * *", strings.Join(atHours, ",")))
 	}
 	return j.Daily()
 }
 
 func (j *Job) Weekly() schedule.Job {
-	return j.SetTiming("0 0 0 * * 0")
+	return j.SetTiming("0 0 * * 0")
 }
 
 func (j *Job) WeeklyAt(atDaysOfWeek ...string) schedule.Job {
 	if len(atDaysOfWeek) > 0 {
-		return j.SetTiming(fmt.Sprintf("0 0 0 * * %s", strings.Join(atDaysOfWeek, ",")))
+		return j.SetTiming(fmt.Sprintf("0 0 * * %s", strings.Join(atDaysOfWeek, ",")))
 	}
 	return j.Weekly()
 }
 
 func (j *Job) Monthly() schedule.Job {
-	return j.SetTiming("0 0 0 1 * *")
+	return j.SetTiming("0 0 1 * *")
 }
 
 func (j *Job) MonthlyAt(atDaysOfMonth ...string) schedule.Job {
 	if len(atDaysOfMonth) > 0 {
-		return j.SetTiming(fmt.Sprintf("0 0 0 %s * *", strings.Join(atDaysOfMonth, ",")))
+		return j.SetTiming(fmt.Sprintf("0 0 %s * *", strings.Join(atDaysOfMonth, ",")))
 	}
 	return j.Monthly()
 }
