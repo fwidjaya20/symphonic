@@ -8,16 +8,17 @@ import (
 )
 
 type DriverArgs struct {
-	Config    ContractConfig.Config
-	Job       Job
-	Listeners []Listener
-	Logger    ContractLog.Logger
-	QueueName string
+	Config        ContractConfig.Config
+	ConsumerGroup string
+	InitialOffset Offset
+	Job           Job
+	Listeners     []Listener
+	Logger        ContractLog.Logger
 }
 
 type QueueDriver interface {
 	Driver() string
-	Publish() error
-	Subscribe(c context.Context) error
 	Flush() error
+	Publish() error
+	Subscribe(ctx context.Context) error
 }

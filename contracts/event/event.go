@@ -2,6 +2,7 @@ package event
 
 type Event interface {
 	Collection() Collection
+	Flush() error
 	Job(job Job) Bus
 	Register(events Collection)
 	Run(config RunEvent) error
@@ -9,14 +10,13 @@ type Event interface {
 
 type Bus interface {
 	OnConnection(connection string) Bus
-	OnQueue(queueName string) Bus
 	Publish() error
 }
 
 type Collection = map[string][]Listener
 
 type RunEvent struct {
-	Connection string
-	Job        Job
-	QueueName  string
+	Connection    string
+	ConsumerGroup string
+	Job           Job
 }

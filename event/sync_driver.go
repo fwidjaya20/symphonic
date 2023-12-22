@@ -11,12 +11,6 @@ type SyncDriver struct {
 	ContractEvent.DriverArgs
 }
 
-func NewSyncDriver(args ContractEvent.DriverArgs) ContractEvent.QueueDriver {
-	return &SyncDriver{
-		args,
-	}
-}
-
 func (d *SyncDriver) Driver() string {
 	return DriverSync
 }
@@ -53,4 +47,10 @@ func (d *SyncDriver) Subscribe(c context.Context) error {
 
 func (d *SyncDriver) Flush() error {
 	return nil
+}
+
+func NewSyncDriver(args ContractEvent.DriverArgs) ContractEvent.QueueDriver {
+	return &SyncDriver{
+		args,
+	}
 }

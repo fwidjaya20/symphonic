@@ -8,25 +8,25 @@ import (
 	"sync"
 
 	"github.com/ThreeDotsLabs/watermill"
-	"github.com/ThreeDotsLabs/watermill-amqp/v2/pkg/amqp"
+	"github.com/ThreeDotsLabs/watermill-kafka/v2/pkg/kafka"
 	"github.com/ThreeDotsLabs/watermill/message"
 	ContractEvent "github.com/fwidjaya20/symphonic/contracts/event"
 	"github.com/sirupsen/logrus"
 )
 
-type RabbitMQDriver struct {
+type KafkaDriver struct {
 	ContractEvent.DriverArgs
 
 	addr       string
-	publisher  *amqp.Publisher
-	subscriber *amqp.Subscriber
+	publisher  *kafka.Publisher
+	subscriber *kafka.Subscriber
 }
 
-func (d *RabbitMQDriver) Driver() string {
-	return DriverRabbitMQ
+func (d *KafkaDriver) Driver() string {
+	return DriverKafka
 }
 
-func (d *RabbitMQDriver) Flush() error {
+func (d *KafkaDriver) Flush() error {
 	if d.publisher != nil {
 		if err := d.publisher.Close(); err != nil {
 			return err
@@ -42,7 +42,7 @@ func (d *RabbitMQDriver) Flush() error {
 	return nil
 }
 
-func (d *RabbitMQDriver) Publish() error {
+func (d *KafkaDriver) Publish() error {
 	if err := d.providePublisher(); err != nil {
 		return err
 	}
@@ -61,14 +61,14 @@ func (d *RabbitMQDriver) Publish() error {
 	}); err != nil {
 		d.Logger.WithFields(logrus.Fields{
 			logrus.ErrorKey: err,
-		}).Errorf("Unable to publish rabbitmq message")
+		}).Errorf("Unable to publish kafka message")
 		return err
 	}
 
 	return nil
 }
 
-func (d *RabbitMQDriver) Subscribe(ctx context.Context) error {
+func (d *KafkaDriver) Subscribe(ctx context.Context) error {
 	if err := d.provideSubscriber(); err != nil {
 		return err
 	}
@@ -121,14 +121,18 @@ func (d *RabbitMQDriver) Subscribe(ctx context.Context) error {
 	return nil
 }
 
-func (d *RabbitMQDriver) providePublisher() error {
+func (d *KafkaDriver) providePublisher() error {
 	if d.publisher != nil {
 		return nil
 	}
 
-	config := amqp.NewDurableQueueConfig(d.addr)
-
-	publisher, err := amqp.NewPublisher(config, watermill.NewStdLogger(false, false))
+	publisher, err := kafka.NewPublisher(
+		kafka.PublisherConfig{
+			Brokers:   []string{d.addr},
+			Marshaler: kafka.DefaultMarshaler{},
+		},
+		watermill.NewStdLogger(false, false),
+	)
 	if nil != err {
 		d.Logger.WithFields(logrus.Fields{
 			logrus.ErrorKey: err,
@@ -140,14 +144,23 @@ func (d *RabbitMQDriver) providePublisher() error {
 	return nil
 }
 
-func (d *RabbitMQDriver) provideSubscriber() error {
+func (d *KafkaDriver) provideSubscriber() error {
 	if d.subscriber != nil {
 		return nil
 	}
 
-	config := amqp.NewDurableQueueConfig(d.addr)
+	config := kafka.DefaultSaramaSubscriberConfig()
+	config.Consumer.Offsets.Initial = d.InitialOffset.SaramaOffset()
 
-	subscriber, err := amqp.NewSubscriber(config, watermill.NewStdLogger(false, false))
+	subscriber, err := kafka.NewSubscriber(
+		kafka.SubscriberConfig{
+			Brokers:               []string{d.addr},
+			Unmarshaler:           kafka.DefaultMarshaler{},
+			OverwriteSaramaConfig: config,
+			ConsumerGroup:         d.ConsumerGroup,
+		},
+		watermill.NewStdLogger(false, false),
+	)
 	if nil != err {
 		d.Logger.WithFields(logrus.Fields{
 			logrus.ErrorKey: err,
@@ -160,16 +173,13 @@ func (d *RabbitMQDriver) provideSubscriber() error {
 	return nil
 }
 
-func NewRabbitMQDriver(args ContractEvent.DriverArgs) ContractEvent.QueueDriver {
-	return &RabbitMQDriver{
-		DriverArgs: ContractEvent.DriverArgs{},
+func NewKafkaDriver(args ContractEvent.DriverArgs) ContractEvent.QueueDriver {
+	return &KafkaDriver{
+		DriverArgs: args,
 		addr: fmt.Sprintf(
-			"%s://%s:%s@%s:%s/",
-			args.Config.GetString("queue.connections.rabbitmq.protocol"),
-			args.Config.GetString("queue.connections.rabbitmq.username"),
-			args.Config.GetString("queue.connections.rabbitmq.password"),
-			args.Config.GetString("queue.connections.rabbitmq.host"),
-			args.Config.GetString("queue.connections.rabbitmq.port"),
+			"%s:%s",
+			args.Config.GetString("queue.connections.kafka.host"),
+			args.Config.GetString("queue.connections.kafka.port"),
 		),
 		publisher:  nil,
 		subscriber: nil,

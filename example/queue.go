@@ -58,9 +58,9 @@ func main() {
 
 	go func() {
 		if err := facades.Event().Run(ContractEvent.RunEvent{
-			Connection: event.DriverRedis,
-			Job:        ExampleEvent.PostCreated{},
-			QueueName:  "symphonic-example-queue",
+			Connection:    event.DriverRedis,
+			ConsumerGroup: "symphonic-example-group",
+			Job:           ExampleEvent.PostCreated{},
 		}); nil != err {
 			SysLog.Fatalln(err.Error())
 		}
@@ -75,7 +75,7 @@ func main() {
 				Id:        int64(i),
 				Author:    "Fredrick Widjaya",
 				CreatedAt: time.Now(),
-			}).OnConnection(event.DriverRedis).OnQueue("testing-queue").Publish(); nil != err {
+			}).OnConnection(event.DriverRedis).Publish(); nil != err {
 				SysLog.Fatalln(err.Error())
 			}
 		}

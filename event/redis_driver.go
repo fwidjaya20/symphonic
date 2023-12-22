@@ -16,21 +16,12 @@ type RedisDriver struct {
 	connection *redis.Client
 }
 
-func NewRedisDriver(args ContractEvent.DriverArgs) ContractEvent.QueueDriver {
-	return &RedisDriver{
-		DriverArgs: args,
-		connection: redis.NewClient(&redis.Options{
-			Addr: fmt.Sprintf(
-				"%s:%s",
-				args.Config.GetString("queue.connections.redis.host"),
-				args.Config.GetString("queue.connections.redis.port"),
-			),
-		}),
-	}
-}
-
 func (r *RedisDriver) Driver() string {
 	return DriverRedis
+}
+
+func (r *RedisDriver) Flush() error {
+	return r.connection.Close()
 }
 
 func (r *RedisDriver) Publish() error {
@@ -74,6 +65,15 @@ func (r *RedisDriver) Subscribe(c context.Context) error {
 	}
 }
 
-func (r *RedisDriver) Flush() error {
-	return r.connection.Close()
+func NewRedisDriver(args ContractEvent.DriverArgs) ContractEvent.QueueDriver {
+	return &RedisDriver{
+		DriverArgs: args,
+		connection: redis.NewClient(&redis.Options{
+			Addr: fmt.Sprintf(
+				"%s:%s",
+				args.Config.GetString("queue.connections.redis.host"),
+				args.Config.GetString("queue.connections.redis.port"),
+			),
+		}),
+	}
 }
