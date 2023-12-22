@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Using custom parser instead of cron.WithSeconds().
 - Change all native Event Stream engine to Watermill Event Stream.
 
 ## [1.1.6] - 2023-12-16
