@@ -1,8 +1,6 @@
 package event
 
 import (
-	"sync"
-
 	"github.com/fwidjaya20/symphonic/contracts/config"
 	"github.com/fwidjaya20/symphonic/contracts/event"
 	"github.com/fwidjaya20/symphonic/contracts/log"
@@ -15,7 +13,6 @@ type Bus struct {
 	isQueued   bool
 	job        event.Job
 	listeners  []event.Listener
-	locker     sync.Mutex
 	logger     log.Logger
 }
 
@@ -29,7 +26,6 @@ func NewEventBus(config config.Config, job event.Job, listeners []event.Listener
 		isQueued:   false,
 		job:        job,
 		listeners:  listeners,
-		locker:     sync.Mutex{},
 		logger:     logger,
 	}
 
@@ -51,9 +47,6 @@ func (b *Bus) OnConnection(driver string) event.Bus {
 }
 
 func (b *Bus) Publish() error {
-	b.locker.Lock()
-	defer b.locker.Unlock()
-
 	return b.driver.Publish()
 }
 

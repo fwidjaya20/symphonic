@@ -19,4 +19,5 @@ type RunEvent struct {
 	Connection    string
 	ConsumerGroup string
 	Job           Job
+	Offset        Offset
 }

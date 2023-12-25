@@ -35,6 +35,7 @@ func (a *Application) Run(config event.RunEvent) error {
 	a.driver = GetQueueDriver(config.Connection, event.DriverArgs{
 		Config:        a.config,
 		ConsumerGroup: config.ConsumerGroup,
+		InitialOffset: config.Offset,
 		Job:           config.Job,
 		Listeners:     a.Collection()[config.Job.Signature()],
 		Logger:        a.logger,

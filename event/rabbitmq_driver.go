@@ -162,7 +162,7 @@ func (d *RabbitMQDriver) provideSubscriber() error {
 
 func NewRabbitMQDriver(args ContractEvent.DriverArgs) ContractEvent.QueueDriver {
 	return &RabbitMQDriver{
-		DriverArgs: ContractEvent.DriverArgs{},
+		DriverArgs: args,
 		addr: fmt.Sprintf(
 			"%s://%s:%s@%s:%s/",
 			args.Config.GetString("queue.connections.rabbitmq.protocol"),

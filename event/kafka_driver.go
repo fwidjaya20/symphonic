@@ -7,6 +7,7 @@ import (
 	"reflect"
 	"sync"
 
+	"github.com/Shopify/sarama"
 	"github.com/ThreeDotsLabs/watermill"
 	"github.com/ThreeDotsLabs/watermill-kafka/v2/pkg/kafka"
 	"github.com/ThreeDotsLabs/watermill/message"
@@ -145,6 +146,12 @@ func (d *KafkaDriver) providePublisher() error {
 }
 
 func (d *KafkaDriver) provideSubscriber() error {
+	d.Logger.WithFields(logrus.Fields{
+		"Offset":           d.InitialOffset,
+		"To Sarama Offset": d.InitialOffset.SaramaOffset(),
+		"Sarama Offset":    sarama.OffsetOldest,
+	}).Info("FIND THIS")
+
 	if d.subscriber != nil {
 		return nil
 	}
