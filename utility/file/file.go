@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 )
 
-func Create(file string, content string) error {
+func Create(file, content string) error {
 	if err := os.MkdirAll(filepath.Dir(file), os.ModePerm); err != nil {
 		return err
 	}
@@ -14,6 +14,7 @@ func Create(file string, content string) error {
 	if err != nil {
 		return err
 	}
+
 	defer func() {
 		if closeErr := f.Close(); closeErr != nil && err == nil {
 			err = closeErr

@@ -10,7 +10,7 @@ const Binding = "symphonic.database"
 
 type ServiceProvider struct{}
 
-func (provider *ServiceProvider) Boot(app foundation.Application) {}
+func (provider *ServiceProvider) Boot(_ foundation.Application) {}
 
 func (provider *ServiceProvider) Register(app foundation.Application) {
 	config := app.GetConfig()

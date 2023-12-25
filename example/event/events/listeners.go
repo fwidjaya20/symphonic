@@ -1,4 +1,4 @@
-package event
+package events
 
 import (
 	"fmt"
@@ -9,8 +9,9 @@ import (
 type CalculateAuthorStatistic struct{}
 
 func (l *CalculateAuthorStatistic) Handle(e ContractEvent.Job) error {
-	payload := e.GetPayload().(PostCreated)
+	payload, _ := e.GetPayload().(PostCreated)
 	fmt.Println(l.Signature(), payload)
+
 	return nil
 }
 
@@ -21,8 +22,9 @@ func (l *CalculateAuthorStatistic) Signature() string {
 type SendNewsletterNotification struct{}
 
 func (l SendNewsletterNotification) Handle(e ContractEvent.Job) error {
-	payload := e.GetPayload().(PostCreated)
+	payload, _ := e.GetPayload().(PostCreated)
 	fmt.Println(l.Signature(), payload)
+
 	return nil
 }
 

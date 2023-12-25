@@ -3,19 +3,19 @@ package event
 import (
 	"context"
 
-	"github.com/fwidjaya20/symphonic/contracts/config"
-	"github.com/fwidjaya20/symphonic/contracts/event"
-	"github.com/fwidjaya20/symphonic/contracts/log"
+	ContractConfig "github.com/fwidjaya20/symphonic/contracts/config"
+	ContractEvent "github.com/fwidjaya20/symphonic/contracts/event"
+	ContractLog "github.com/fwidjaya20/symphonic/contracts/log"
 )
 
 type Application struct {
-	config    config.Config
-	driver    event.QueueDriver
-	listeners event.Collection
-	logger    log.Logger
+	config    ContractConfig.Config
+	driver    ContractEvent.QueueDriver
+	listeners ContractEvent.Collection
+	logger    ContractLog.Logger
 }
 
-func (a *Application) Collection() event.Collection {
+func (a *Application) Collection() ContractEvent.Collection {
 	return a.listeners
 }
 
@@ -23,16 +23,16 @@ func (a *Application) Flush() error {
 	return a.driver.Flush()
 }
 
-func (a *Application) Job(job event.Job) event.Bus {
+func (a *Application) Job(job ContractEvent.Job) ContractEvent.Bus {
 	return NewEventBus(a.config, job, a.listeners[job.Topic()], a.logger)
 }
 
-func (a *Application) Register(listeners event.Collection) {
+func (a *Application) Register(listeners ContractEvent.Collection) {
 	a.listeners = listeners
 }
 
-func (a *Application) Run(config event.RunEvent) error {
-	a.driver = GetQueueDriver(config.Connection, event.DriverArgs{
+func (a *Application) Run(config ContractEvent.RunEvent) error {
+	a.driver = GetQueueDriver(config.Connection, &ContractEvent.DriverArgs{
 		Config:        a.config,
 		ConsumerGroup: config.ConsumerGroup,
 		InitialOffset: config.Offset,
@@ -44,10 +44,11 @@ func (a *Application) Run(config event.RunEvent) error {
 	return a.driver.Subscribe(context.Background())
 }
 
-func NewApplication(config config.Config, logger log.Logger) event.Event {
+func NewApplication(config ContractConfig.Config, logger ContractLog.Logger) ContractEvent.Event {
 	return &Application{
 		config:    config,
-		listeners: make(event.Collection),
+		driver:    nil,
+		listeners: make(ContractEvent.Collection),
 		logger:    logger,
 	}
 }

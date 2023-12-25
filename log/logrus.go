@@ -15,8 +15,9 @@ func toLogrusLevel(level LabStackLog.Lvl) logrus.Level {
 		return logrus.WarnLevel
 	case LabStackLog.ERROR:
 		return logrus.ErrorLevel
+	default:
+		return logrus.InfoLevel
 	}
-	return logrus.InfoLevel
 }
 
 func toEchoLevel(level logrus.Level) LabStackLog.Lvl {
@@ -29,6 +30,7 @@ func toEchoLevel(level logrus.Level) LabStackLog.Lvl {
 		return LabStackLog.WARN
 	case logrus.ErrorLevel:
 		return LabStackLog.ERROR
+	default:
+		return LabStackLog.OFF
 	}
-	return LabStackLog.OFF
 }

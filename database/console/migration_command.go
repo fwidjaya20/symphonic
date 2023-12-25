@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/fwidjaya20/symphonic/contracts/config"
-	"github.com/fwidjaya20/symphonic/contracts/console"
+	ContractConfig "github.com/fwidjaya20/symphonic/contracts/config"
+	ContractConsole "github.com/fwidjaya20/symphonic/contracts/console"
 	"github.com/fwidjaya20/symphonic/utility/file"
 	"github.com/golang-module/carbon/v2"
 	"github.com/gookit/color"
@@ -13,17 +13,17 @@ import (
 )
 
 type MigrationCommand struct {
-	config config.Config
+	config ContractConfig.Config
 }
 
-func NewMigrationCommand(config config.Config) console.Command {
+func NewMigrationCommand(config ContractConfig.Config) ContractConsole.Command {
 	return &MigrationCommand{
 		config: config,
 	}
 }
 
 func (cmd *MigrationCommand) Setup() *cli.Command {
-	return &cli.Command{
+	return &cli.Command{ //nolint:exhaustruct // ignore due to cli configuration
 		Name:        "make:migration",
 		Category:    "make",
 		Description: "Create database migration file",
@@ -32,11 +32,11 @@ func (cmd *MigrationCommand) Setup() *cli.Command {
 }
 
 func (cmd *MigrationCommand) Handle(ctx *cli.Context) error {
-	if err := file.Create(cmd.getPath(ctx.Args().Get(0), "down"), ""); nil != err {
+	if err := file.Create(cmd.getPath(ctx.Args().Get(0), "down"), ""); err != nil {
 		return err
 	}
 
-	if err := file.Create(cmd.getPath(ctx.Args().Get(0), "up"), ""); nil != err {
+	if err := file.Create(cmd.getPath(ctx.Args().Get(0), "up"), ""); err != nil {
 		return err
 	}
 
@@ -46,11 +46,17 @@ func (cmd *MigrationCommand) Handle(ctx *cli.Context) error {
 	return nil
 }
 
-func (cmd *MigrationCommand) getFileName(name string, category string) string {
+func (cmd *MigrationCommand) getFileName(name, category string) string {
 	return fmt.Sprintf("%s_%s.%s.sql", carbon.Now().ToShortDateTimeString(), name, category)
 }
 
-func (cmd *MigrationCommand) getPath(name string, category string) string {
+func (cmd *MigrationCommand) getPath(name, category string) string {
 	pwd, _ := os.Getwd()
-	return fmt.Sprintf("%s/%s/migrations/%s", pwd, cmd.config.Get("database.dir", "database"), cmd.getFileName(name, category))
+
+	return fmt.Sprintf(
+		"%s/%s/migrations/%s",
+		pwd,
+		cmd.config.Get("database.dir", "database"),
+		cmd.getFileName(name, category),
+	)
 }

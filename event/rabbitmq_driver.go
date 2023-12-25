@@ -15,7 +15,7 @@ import (
 )
 
 type RabbitMQDriver struct {
-	ContractEvent.DriverArgs
+	*ContractEvent.DriverArgs
 
 	addr       string
 	publisher  *amqp.Publisher
@@ -48,36 +48,41 @@ func (d *RabbitMQDriver) Publish() error {
 	}
 
 	payload, err := json.Marshal(d.Job.GetPayload())
-	if nil != err {
+	if err != nil {
 		d.Logger.WithFields(logrus.Fields{
 			logrus.ErrorKey: err,
 		}).Errorf("Unable to marshal %v", d.Job.GetPayload())
+
 		return err
 	}
 
 	if err := d.publisher.Publish(d.Job.Topic(), &message.Message{
-		UUID:    watermill.NewUUID(),
-		Payload: payload,
+		UUID:     watermill.NewUUID(),
+		Metadata: nil,
+		Payload:  payload,
 	}); err != nil {
 		d.Logger.WithFields(logrus.Fields{
 			logrus.ErrorKey: err,
 		}).Errorf("Unable to publish rabbitmq message")
+
 		return err
 	}
 
 	return nil
 }
 
+//nolint:dupl // ignore duplication because implementation depends on the provider used.
 func (d *RabbitMQDriver) Subscribe(ctx context.Context) error {
 	if err := d.provideSubscriber(); err != nil {
 		return err
 	}
 
 	messages, err := d.subscriber.Subscribe(ctx, d.Job.Topic())
-	if nil != err {
+	if err != nil {
 		d.Logger.WithFields(logrus.Fields{
 			logrus.ErrorKey: err,
 		}).Errorf("failed to consume messages with '%s' topic", d.Job.Topic())
+
 		return err
 	}
 
@@ -85,13 +90,19 @@ func (d *RabbitMQDriver) Subscribe(ctx context.Context) error {
 
 	go func(packets <-chan *message.Message) {
 		for it := range packets {
-			jobInstance := reflect.New(reflect.TypeOf(d.Job)).Interface().(ContractEvent.Job)
+			jobInstance, ok := reflect.New(reflect.TypeOf(d.Job)).Interface().(ContractEvent.Job)
+			if !ok {
+				d.Logger.Warnf("%T doesnt implement Job", d.Job)
 
-			if err = json.Unmarshal(it.Payload, jobInstance); nil != err {
+				continue
+			}
+
+			if err = json.Unmarshal(it.Payload, jobInstance); err != nil {
 				d.Logger.WithFields(logrus.Fields{
 					logrus.ErrorKey: err,
 					"payload":       string(it.Payload),
 				}).Warn("error unmarshalling payload")
+
 				continue
 			}
 
@@ -99,6 +110,7 @@ func (d *RabbitMQDriver) Subscribe(ctx context.Context) error {
 
 			for _, listener := range d.Listeners {
 				wg.Add(1)
+
 				go func(fn ContractEvent.Listener) {
 					defer wg.Done()
 
@@ -129,12 +141,14 @@ func (d *RabbitMQDriver) providePublisher() error {
 	config := amqp.NewDurableQueueConfig(d.addr)
 
 	publisher, err := amqp.NewPublisher(config, watermill.NewStdLogger(false, false))
-	if nil != err {
+	if err != nil {
 		d.Logger.WithFields(logrus.Fields{
 			logrus.ErrorKey: err,
 		}).Error("Unable to initialize Kafka Publisher.")
+
 		return err
 	}
+
 	d.publisher = publisher
 
 	return nil
@@ -148,10 +162,11 @@ func (d *RabbitMQDriver) provideSubscriber() error {
 	config := amqp.NewDurableQueueConfig(d.addr)
 
 	subscriber, err := amqp.NewSubscriber(config, watermill.NewStdLogger(false, false))
-	if nil != err {
+	if err != nil {
 		d.Logger.WithFields(logrus.Fields{
 			logrus.ErrorKey: err,
 		}).Error("Unable to initialize Kafka Subscriber.")
+
 		return err
 	}
 
@@ -160,7 +175,7 @@ func (d *RabbitMQDriver) provideSubscriber() error {
 	return nil
 }
 
-func NewRabbitMQDriver(args ContractEvent.DriverArgs) ContractEvent.QueueDriver {
+func NewRabbitMQDriver(args *ContractEvent.DriverArgs) ContractEvent.QueueDriver {
 	return &RabbitMQDriver{
 		DriverArgs: args,
 		addr: fmt.Sprintf(

@@ -4,16 +4,16 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/fwidjaya20/symphonic/contracts/config"
+	ContractConfig "github.com/fwidjaya20/symphonic/contracts/config"
 	"github.com/golang-migrate/migrate/v4/database"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 )
 
 type Pgsql struct {
-	config config.Config
+	config ContractConfig.Config
 }
 
-func NewPostgreSqlDriver(config config.Config) DatabaseDriver {
+func NewPostgreSQLDriver(config ContractConfig.Config) DatabaseDriver {
 	return &Pgsql{
 		config: config,
 	}
@@ -32,10 +32,11 @@ func (driver *Pgsql) GetDSN() string {
 
 func (driver *Pgsql) GetInstance(table string) (database.Driver, error) {
 	conn, err := driver.Open()
-	if nil != err {
+	if err != nil {
 		return nil, err
 	}
 
+	//nolint:exhaustruct // ignore due to postgres configuration
 	return postgres.WithInstance(conn, &postgres.Config{
 		MigrationsTable: table,
 	})

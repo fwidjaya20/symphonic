@@ -3,25 +3,25 @@ package console
 import (
 	"errors"
 
-	"github.com/fwidjaya20/symphonic/contracts/config"
-	"github.com/fwidjaya20/symphonic/contracts/console"
+	ContractConfig "github.com/fwidjaya20/symphonic/contracts/config"
+	ContractConsole "github.com/fwidjaya20/symphonic/contracts/console"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/gookit/color"
 	"github.com/urfave/cli/v2"
 )
 
 type MigrateResetCommand struct {
-	config config.Config
+	config ContractConfig.Config
 }
 
-func NewMigrateResetCommand(config config.Config) console.Command {
+func NewMigrateResetCommand(config ContractConfig.Config) ContractConsole.Command {
 	return &MigrateResetCommand{
 		config: config,
 	}
 }
 
 func (cmd *MigrateResetCommand) Setup() *cli.Command {
-	return &cli.Command{
+	return &cli.Command{ //nolint:exhaustruct // ignore due to cli configuration
 		Name:        "migrate:reset",
 		Category:    "migrate",
 		Description: "Rollback all database migrations",
@@ -31,36 +31,40 @@ func (cmd *MigrateResetCommand) Setup() *cli.Command {
 
 func (cmd *MigrateResetCommand) Handle(*cli.Context) error {
 	instance, err := getMigrate(cmd.config)
-	if nil != err {
+	if err != nil {
 		if errors.Is(err, ErrEmptyMigrationDir) {
 			color.Yellowln("There is no migration files yet.")
 			return nil
 		}
+
 		return err
 	}
-	if nil == instance {
+
+	if instance == nil {
 		color.Yellowln("Database configuration was invalid!")
 		return nil
 	}
 
-	if err := instance.Down(); nil != err && !errors.Is(err, migrate.ErrNoChange) {
+	if err = instance.Down(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		return err
 	}
 
 	instance, err = getSeeder(cmd.config)
-	if nil != err {
+	if err != nil {
 		if errors.Is(err, ErrEmptyMigrationDir) {
 			color.Yellowln("There is no seeder files yet.")
 			return nil
 		}
+
 		return err
 	}
-	if nil == instance {
+
+	if instance == nil {
 		color.Yellowln("Database configuration was invalid!")
 		return nil
 	}
 
-	if err := instance.Down(); nil != err && !errors.Is(err, migrate.ErrNoChange) {
+	if err := instance.Down(); err != nil && !errors.Is(err, migrate.ErrNoChange) {
 		return err
 	}
 

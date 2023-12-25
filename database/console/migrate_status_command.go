@@ -3,24 +3,24 @@ package console
 import (
 	"errors"
 
-	"github.com/fwidjaya20/symphonic/contracts/config"
-	"github.com/fwidjaya20/symphonic/contracts/console"
+	ContractConfig "github.com/fwidjaya20/symphonic/contracts/config"
+	ContractConsole "github.com/fwidjaya20/symphonic/contracts/console"
 	"github.com/gookit/color"
 	"github.com/urfave/cli/v2"
 )
 
 type MigrateStatusCommand struct {
-	config config.Config
+	config ContractConfig.Config
 }
 
-func NewMigrateStatusCommand(config config.Config) console.Command {
+func NewMigrateStatusCommand(config ContractConfig.Config) ContractConsole.Command {
 	return &MigrateStatusCommand{
 		config: config,
 	}
 }
 
 func (cmd *MigrateStatusCommand) Setup() *cli.Command {
-	return &cli.Command{
+	return &cli.Command{ //nolint:exhaustruct // ignore due to cli configuration
 		Name:        "migrate:status",
 		Category:    "migrate",
 		Description: "Show status of each migrations",
@@ -30,20 +30,22 @@ func (cmd *MigrateStatusCommand) Setup() *cli.Command {
 
 func (cmd *MigrateStatusCommand) Handle(*cli.Context) error {
 	instance, err := getMigrate(cmd.config)
-	if nil != err {
+	if err != nil {
 		if errors.Is(err, ErrEmptyMigrationDir) {
 			color.Yellowln("There is no seeder files yet.")
 			return nil
 		}
+
 		return err
 	}
-	if nil == instance {
+
+	if instance == nil {
 		color.Yellowln("Database configuration was invalid!")
 		return nil
 	}
 
 	version, isDirty, err := instance.Version()
-	if nil != err {
+	if err != nil {
 		return err
 	}
 

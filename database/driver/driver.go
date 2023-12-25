@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"log"
 
-	"github.com/fwidjaya20/symphonic/contracts/config"
+	ContractConfig "github.com/fwidjaya20/symphonic/contracts/config"
 	"github.com/golang-migrate/migrate/v4/database"
 )
 
@@ -14,10 +14,10 @@ type DatabaseDriver interface {
 	GetInstance(table string) (database.Driver, error)
 }
 
-func GetDatabaseDriver(config config.Config) DatabaseDriver {
+func GetDatabaseDriver(config ContractConfig.Config) DatabaseDriver {
 	switch config.Get("database.default") {
 	case "postgresql":
-		return NewPostgreSqlDriver(config)
+		return NewPostgreSQLDriver(config)
 	default:
 		log.Fatalln("database driver only support postgresql")
 		return nil

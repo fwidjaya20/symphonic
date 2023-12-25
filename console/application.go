@@ -39,7 +39,7 @@ func (a *Application) Run(arguments []string, isExitAfterComplete bool) {
 	artisanIndex := -1
 
 	for i, it := range arguments {
-		if "artisan" == it {
+		if it == "artisan" {
 			artisanIndex = i
 			break
 		}
@@ -49,7 +49,7 @@ func (a *Application) Run(arguments []string, isExitAfterComplete bool) {
 		return
 	}
 
-	if err := a.Engine().Run(append([]string{arguments[0]}, arguments[artisanIndex+1:]...)); nil != err {
+	if err := a.Engine().Run(append([]string{arguments[0]}, arguments[artisanIndex+1:]...)); err != nil {
 		panic(err.Error())
 	}
 

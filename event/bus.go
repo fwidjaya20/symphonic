@@ -1,13 +1,13 @@
 package event
 
 import (
-	"github.com/fwidjaya20/symphonic/contracts/config"
+	ContractConfig "github.com/fwidjaya20/symphonic/contracts/config"
 	"github.com/fwidjaya20/symphonic/contracts/event"
 	"github.com/fwidjaya20/symphonic/contracts/log"
 )
 
 type Bus struct {
-	config     config.Config
+	config     ContractConfig.Config
 	connection string
 	driver     event.QueueDriver
 	isQueued   bool
@@ -16,7 +16,12 @@ type Bus struct {
 	logger     log.Logger
 }
 
-func NewEventBus(config config.Config, job event.Job, listeners []event.Listener, logger log.Logger) event.Bus {
+func NewEventBus(
+	config ContractConfig.Config,
+	job event.Job,
+	listeners []event.Listener,
+	logger log.Logger,
+) event.Bus {
 	connection := config.GetString("queue.default", DriverSync)
 
 	bus := Bus{
@@ -51,7 +56,7 @@ func (b *Bus) Publish() error {
 }
 
 func (b *Bus) provideDriver(driver string) {
-	b.driver = GetQueueDriver(driver, event.DriverArgs{
+	b.driver = GetQueueDriver(driver, &event.DriverArgs{
 		Config:        b.config,
 		ConsumerGroup: "",
 		InitialOffset: event.OffsetOldest,

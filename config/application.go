@@ -14,7 +14,7 @@ type Application struct {
 }
 
 func NewApplication(filePath string) *Application {
-	if _, err := os.Stat(filePath); nil != err {
+	if _, err := os.Stat(filePath); err != nil {
 		log.Fatal("Environment file was not found.")
 	}
 
@@ -25,7 +25,7 @@ func NewApplication(filePath string) *Application {
 	app.viper.SetConfigFile("env")
 	app.viper.SetConfigFile(filePath)
 
-	if err := app.viper.ReadInConfig(); nil != err {
+	if err := app.viper.ReadInConfig(); err != nil {
 		log.Fatalln(err.Error())
 	}
 
@@ -74,10 +74,14 @@ func (app *Application) GetString(name string, defaultValue ...string) string {
 	return cast.ToString(app.Get(name, defaultValue))
 }
 
-func (app *Application) GetArrayString(name string, delimiter string, defaultValues ...string) []string {
+func (app *Application) GetArrayString(
+	name string,
+	delimiter string,
+	defaultValues ...string,
+) []string {
 	str := app.GetString(name, "")
 
-	if len(str) == 0 {
+	if str == "" {
 		return defaultValues
 	}
 

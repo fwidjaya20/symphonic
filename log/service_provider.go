@@ -6,7 +6,7 @@ const Binding = "symphonic.log"
 
 type ServiceProvider struct{}
 
-func (sp *ServiceProvider) Boot(app foundation.Application) {}
+func (sp *ServiceProvider) Boot(_ foundation.Application) {}
 
 func (sp *ServiceProvider) Register(app foundation.Application) {
 	app.Instance(Binding, func(app foundation.Application) (any, error) {

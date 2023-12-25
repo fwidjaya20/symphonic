@@ -17,14 +17,16 @@ func (a *Application) Register(jobs []schedule.Job) {
 	for _, job := range jobs {
 		_, err := a.cron.AddFunc(job.GetTiming(), job.GetCallback())
 
-		if nil != err {
+		if err != nil {
 			a.logger.Print(err.Error())
 		}
 	}
 }
 
 func (a *Application) Run() {
-	a.logger.Info("Scheduler runs with [SecondOptional | Minute | Hour | Dom | Month | Dow | Descriptor] parser.")
+	a.logger.Info(
+		"Scheduler runs with [SecondOptional | Minute | Hour | Dom | Month | Dow | Descriptor] parser.",
+	)
 	a.cron.Start()
 }
 
@@ -36,7 +38,9 @@ func NewApplication(logger log.Logger) schedule.Schedule {
 	return &Application{
 		cron: cron.New(
 			cron.WithParser(
-				cron.NewParser(cron.SecondOptional|cron.Minute|cron.Hour|cron.Dom|cron.Month|cron.Dom|cron.Descriptor),
+				cron.NewParser(
+					cron.SecondOptional|cron.Minute|cron.Hour|cron.Dom|cron.Month|cron.Dom|cron.Descriptor,
+				),
 			),
 			cron.WithChain(cron.SkipIfStillRunning(cron.DefaultLogger)),
 			cron.WithChain(cron.Recover(cron.DefaultLogger)),

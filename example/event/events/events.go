@@ -1,9 +1,9 @@
-package event
+package events
 
 import "time"
 
 type PostCreated struct {
-	Id        int64     `json:"id"`
+	ID        int64     `json:"id"`
 	Author    string    `json:"author"`
 	CreatedAt time.Time `json:"created_at"`
 }

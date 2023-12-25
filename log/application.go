@@ -43,11 +43,11 @@ func (a *Application) Prefix() string {
 }
 
 func (a *Application) SetPrefix(_ string) {
-	return
+
 }
 
 func (a *Application) SetHeader(_ string) {
-	return
+
 }
 
 func (a *Application) WithFields(fields logrus.Fields) *logrus.Entry {
@@ -67,6 +67,7 @@ func (a *Application) Printj(j LabStackLog.JSON) {
 	if err != nil {
 		panic(err)
 	}
+
 	a.log.Println(string(b))
 }
 
@@ -83,6 +84,7 @@ func (a *Application) Debugj(j LabStackLog.JSON) {
 	if err != nil {
 		panic(err)
 	}
+
 	a.log.Debugln(string(b))
 }
 
@@ -99,6 +101,7 @@ func (a *Application) Infoj(j LabStackLog.JSON) {
 	if err != nil {
 		panic(err)
 	}
+
 	a.log.Infoln(string(b))
 }
 
@@ -107,7 +110,7 @@ func (a *Application) Warn(i ...interface{}) {
 }
 
 func (a *Application) Warnf(format string, args ...interface{}) {
-	a.log.Warnf(format, args)
+	a.log.Warnf(format, args...)
 }
 
 func (a *Application) Warnj(j LabStackLog.JSON) {
@@ -115,6 +118,7 @@ func (a *Application) Warnj(j LabStackLog.JSON) {
 	if err != nil {
 		panic(err)
 	}
+
 	a.log.Warnln(string(b))
 }
 
@@ -131,6 +135,7 @@ func (a *Application) Errorj(j LabStackLog.JSON) {
 	if err != nil {
 		panic(err)
 	}
+
 	a.log.Errorln(string(b))
 }
 
@@ -139,7 +144,7 @@ func (a *Application) Fatal(i ...interface{}) {
 }
 
 func (a *Application) Fatalf(format string, args ...interface{}) {
-	a.log.Fatalf(format, args)
+	a.log.Fatalf(format, args...)
 }
 
 func (a *Application) Fatalj(j LabStackLog.JSON) {
@@ -147,6 +152,7 @@ func (a *Application) Fatalj(j LabStackLog.JSON) {
 	if err != nil {
 		panic(err)
 	}
+
 	a.log.Fatalln(string(b))
 }
 
@@ -163,6 +169,7 @@ func (a *Application) Panicj(j LabStackLog.JSON) {
 	if err != nil {
 		panic(err)
 	}
+
 	a.log.Panicln(string(b))
 }
 

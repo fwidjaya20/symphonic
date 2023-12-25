@@ -8,7 +8,7 @@ import (
 )
 
 type SyncDriver struct {
-	ContractEvent.DriverArgs
+	*ContractEvent.DriverArgs
 }
 
 func (d *SyncDriver) Driver() string {
@@ -17,7 +17,9 @@ func (d *SyncDriver) Driver() string {
 
 func (d *SyncDriver) Publish() error {
 	var errors []error
+
 	var mu sync.Mutex
+
 	var wg sync.WaitGroup
 
 	d.Logger.Infof("'%s' has been published: %v", d.Job.Signature(), d.Job.GetPayload())
@@ -27,9 +29,11 @@ func (d *SyncDriver) Publish() error {
 	for _, listener := range d.Listeners {
 		go func(callback ContractEvent.Listener) {
 			defer wg.Done()
-			if err := callback.Handle(d.Job); nil != err {
+
+			if err := callback.Handle(d.Job); err != nil {
 				mu.Lock()
 				defer mu.Unlock()
+
 				errors = append(errors, err)
 			}
 		}(listener)
@@ -40,8 +44,11 @@ func (d *SyncDriver) Publish() error {
 	return nil
 }
 
-func (d *SyncDriver) Subscribe(c context.Context) error {
-	d.Logger.Infof("Running the Sync Driver explicitly is unnecessary and could potentially disrupt system operations.")
+func (d *SyncDriver) Subscribe(_ context.Context) error {
+	d.Logger.Infof(
+		"Running the Sync Driver explicitly is unnecessary and could potentially disrupt system operations.",
+	)
+
 	return nil
 }
 
@@ -49,7 +56,7 @@ func (d *SyncDriver) Flush() error {
 	return nil
 }
 
-func NewSyncDriver(args ContractEvent.DriverArgs) ContractEvent.QueueDriver {
+func NewSyncDriver(args *ContractEvent.DriverArgs) ContractEvent.QueueDriver {
 	return &SyncDriver{
 		args,
 	}

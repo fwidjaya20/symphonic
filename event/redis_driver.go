@@ -11,7 +11,7 @@ import (
 )
 
 type RedisDriver struct {
-	ContractEvent.DriverArgs
+	*ContractEvent.DriverArgs
 
 	connection *redis.Client
 }
@@ -26,11 +26,11 @@ func (r *RedisDriver) Flush() error {
 
 func (r *RedisDriver) Publish() error {
 	payload, err := json.Marshal(r.Job.GetPayload())
-	if nil != err {
+	if err != nil {
 		return err
 	}
 
-	if err = r.connection.Publish(context.Background(), r.Job.Signature(), payload).Err(); nil != err {
+	if err := r.connection.Publish(context.Background(), r.Job.Signature(), payload).Err(); err != nil {
 		return err
 	}
 
@@ -45,35 +45,42 @@ func (r *RedisDriver) Subscribe(c context.Context) error {
 
 	for {
 		msg, err := stream.ReceiveMessage(c)
-		if nil != err {
+		if err != nil {
 			fmt.Printf("Error receiving message: %v\n", err)
 			continue
 		}
 
-		jobInstance := reflect.New(reflect.TypeOf(r.Job)).Interface().(ContractEvent.Job)
+		jobInstance, ok := reflect.New(reflect.TypeOf(r.Job)).Interface().(ContractEvent.Job)
+		if !ok {
+			r.Logger.Warnf("%T doesnt implement Job", r.Job)
 
-		if err = json.Unmarshal([]byte(msg.Payload), jobInstance); nil != err {
+			continue
+		}
+
+		if err = json.Unmarshal([]byte(msg.Payload), jobInstance); err != nil {
 			r.Logger.Infof("Error unmarshalling payload: %v\n", err.Error())
 			continue
 		}
 
 		for _, listener := range r.Listeners {
-			if err = listener.Handle(jobInstance); nil != err {
+			if err = listener.Handle(jobInstance); err != nil {
 				r.Logger.Errorf("Error calling Handle method: %v\n", err.Error())
 			}
 		}
 	}
 }
 
-func NewRedisDriver(args ContractEvent.DriverArgs) ContractEvent.QueueDriver {
+func NewRedisDriver(args *ContractEvent.DriverArgs) ContractEvent.QueueDriver {
 	return &RedisDriver{
 		DriverArgs: args,
-		connection: redis.NewClient(&redis.Options{
-			Addr: fmt.Sprintf(
-				"%s:%s",
-				args.Config.GetString("queue.connections.redis.host"),
-				args.Config.GetString("queue.connections.redis.port"),
-			),
-		}),
+		connection: redis.NewClient(
+			&redis.Options{ //nolint:exhaustruct // ignore due to redis configuration
+				Addr: fmt.Sprintf(
+					"%s:%s",
+					args.Config.GetString("queue.connections.redis.host"),
+					args.Config.GetString("queue.connections.redis.port"),
+				),
+			},
+		),
 	}
 }

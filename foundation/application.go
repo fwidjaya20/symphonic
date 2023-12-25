@@ -30,7 +30,10 @@ type _Application struct {
 }
 
 func init() {
-	app := &_Application{}
+	app := &_Application{
+		bindings:  sync.Map{},
+		instances: sync.Map{},
+	}
 
 	baseServiceProvider := app.getBaseServiceProvider()
 
@@ -45,7 +48,11 @@ func NewApplication() foundation.Application {
 }
 
 func (app *_Application) Boot() {
-	configuredServiceProviders := app.GetConfig().Get("app.providers").([]foundation.ServiceProvider)
+	configuredServiceProviders, ok := app.GetConfig().Get("app.providers").([]foundation.ServiceProvider)
+	if !ok {
+		panic("invalid service providers")
+	}
+
 	configuredTz := app.GetConfig().GetString("app.timezone", carbon.UTC)
 
 	app.registerServiceProviders(configuredServiceProviders)
@@ -66,7 +73,7 @@ func (app *_Application) Get(key any) (any, error) {
 	}
 
 	bindingImpl, err := binding.(func(app foundation.Application) (any, error))(app)
-	if nil != err {
+	if err != nil {
 		return nil, err
 	}
 
@@ -77,46 +84,51 @@ func (app *_Application) Get(key any) (any, error) {
 
 func (app *_Application) GetConfig() ContractConfig.Config {
 	instance, err := app.Get(config.Binding)
-	if nil != err {
+	if err != nil {
 		SysLog.Fatalln(err.Error())
 		return nil
 	}
+
 	return instance.(ContractConfig.Config)
 }
 
 func (app *_Application) GetConsole() ContractConsole.Console {
 	instance, err := app.Get(console.Binding)
-	if nil != err {
+	if err != nil {
 		SysLog.Fatalln(err.Error())
 		return nil
 	}
+
 	return instance.(ContractConsole.Console)
 }
 
 func (app *_Application) GetEvent() ContractEvent.Event {
 	instance, err := app.Get(event.Binding)
-	if nil != err {
+	if err != nil {
 		SysLog.Fatalln(err.Error())
 		return nil
 	}
+
 	return instance.(ContractEvent.Event)
 }
 
 func (app *_Application) GetLogger() ContractLog.Logger {
 	instance, err := app.Get(log.Binding)
-	if nil != err {
+	if err != nil {
 		SysLog.Fatalln(err.Error())
 		return nil
 	}
+
 	return instance.(ContractLog.Logger)
 }
 
 func (app *_Application) GetSchedule() ContractSchedule.Schedule {
 	instance, err := app.Get(schedule.Binding)
-	if nil != err {
+	if err != nil {
 		SysLog.Fatalln(err.Error())
 		return nil
 	}
+
 	return instance.(ContractSchedule.Schedule)
 }
 

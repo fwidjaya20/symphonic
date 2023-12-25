@@ -15,6 +15,7 @@ type Job struct {
 func NewJob(callback func()) schedule.Job {
 	return &Job{
 		callback: callback,
+		timing:   "",
 	}
 }
 
@@ -107,6 +108,7 @@ func (j *Job) HourlyAt(atMinutes ...string) schedule.Job {
 	if len(atMinutes) > 0 {
 		return j.SetTiming(fmt.Sprintf("%s * * * *", strings.Join(atMinutes, ",")))
 	}
+
 	return j.Hourly()
 }
 
@@ -118,6 +120,7 @@ func (j *Job) DailyAt(atHours ...string) schedule.Job {
 	if len(atHours) > 0 {
 		return j.SetTiming(fmt.Sprintf("0 %s * * *", strings.Join(atHours, ",")))
 	}
+
 	return j.Daily()
 }
 
@@ -129,6 +132,7 @@ func (j *Job) WeeklyAt(atDaysOfWeek ...string) schedule.Job {
 	if len(atDaysOfWeek) > 0 {
 		return j.SetTiming(fmt.Sprintf("0 0 * * %s", strings.Join(atDaysOfWeek, ",")))
 	}
+
 	return j.Weekly()
 }
 
@@ -140,5 +144,6 @@ func (j *Job) MonthlyAt(atDaysOfMonth ...string) schedule.Job {
 	if len(atDaysOfMonth) > 0 {
 		return j.SetTiming(fmt.Sprintf("0 0 %s * *", strings.Join(atDaysOfMonth, ",")))
 	}
+
 	return j.Monthly()
 }

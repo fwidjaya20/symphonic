@@ -1,4 +1,4 @@
-package schedule
+package jobs
 
 import "github.com/fwidjaya20/symphonic/contracts/schedule"
 
