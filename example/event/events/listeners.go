@@ -1,15 +1,19 @@
 package events
 
 import (
+	"encoding/json"
 	"fmt"
-
-	ContractEvent "github.com/fwidjaya20/symphonic/contracts/event"
 )
 
 type CalculateAuthorStatistic struct{}
 
-func (l *CalculateAuthorStatistic) Handle(e ContractEvent.Job) error {
-	payload, _ := e.GetPayload().(PostCreated)
+func (l *CalculateAuthorStatistic) Handle(payload []byte) error {
+	var data PostCreated
+
+	if err := json.Unmarshal(payload, &data); err != nil {
+		return err
+	}
+
 	fmt.Println(l.Signature(), payload)
 
 	return nil
@@ -21,8 +25,13 @@ func (l *CalculateAuthorStatistic) Signature() string {
 
 type SendNewsletterNotification struct{}
 
-func (l SendNewsletterNotification) Handle(e ContractEvent.Job) error {
-	payload, _ := e.GetPayload().(PostCreated)
+func (l SendNewsletterNotification) Handle(payload []byte) error {
+	var data PostCreated
+
+	if err := json.Unmarshal(payload, &data); err != nil {
+		return err
+	}
+
 	fmt.Println(l.Signature(), payload)
 
 	return nil

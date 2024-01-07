@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
 	"sync"
 
 	"github.com/ThreeDotsLabs/watermill"
@@ -77,11 +76,11 @@ func (d *KafkaDriver) Subscribe(ctx context.Context) error {
 		return err
 	}
 
-	messages, err := d.subscriber.Subscribe(ctx, d.Job.Topic())
+	messages, err := d.subscriber.Subscribe(ctx, d.Topic)
 	if err != nil {
 		d.Logger.WithFields(logrus.Fields{
 			logrus.ErrorKey: err,
-		}).Errorf("failed to consume messages with '%s' topic", d.Job.Topic())
+		}).Errorf("failed to consume messages with '%s' topic", d.Topic)
 
 		return err
 	}
@@ -90,22 +89,6 @@ func (d *KafkaDriver) Subscribe(ctx context.Context) error {
 
 	go func(packets <-chan *message.Message) {
 		for it := range packets {
-			jobInstance, ok := reflect.New(reflect.TypeOf(d.Job)).Interface().(ContractEvent.Job)
-			if !ok {
-				d.Logger.Warnf("%T doesnt implement Job", d.Job)
-
-				continue
-			}
-
-			if err = json.Unmarshal(it.Payload, jobInstance); err != nil {
-				d.Logger.WithFields(logrus.Fields{
-					logrus.ErrorKey: err,
-					"payload":       string(it.Payload),
-				}).Warn("error unmarshalling payload")
-
-				continue
-			}
-
 			var wg sync.WaitGroup
 
 			for _, listener := range d.Listeners {
@@ -114,7 +97,7 @@ func (d *KafkaDriver) Subscribe(ctx context.Context) error {
 				go func(fn ContractEvent.Listener) {
 					defer wg.Done()
 
-					if err := fn.Handle(jobInstance); err != nil {
+					if err := fn.Handle(it.Payload); err != nil {
 						d.Logger.WithFields(logrus.Fields{
 							logrus.ErrorKey: err,
 						}).Warn("error calling Handle method")

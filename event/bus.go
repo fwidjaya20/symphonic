@@ -61,6 +61,7 @@ func (b *Bus) provideDriver(driver string) {
 		ConsumerGroup: "",
 		InitialOffset: event.OffsetOldest,
 		Job:           b.job,
+		Topic:         b.job.Topic(),
 		Listeners:     b.listeners,
 		Logger:        b.logger,
 	})

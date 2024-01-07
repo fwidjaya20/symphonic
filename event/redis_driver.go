@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"reflect"
 
 	ContractEvent "github.com/fwidjaya20/symphonic/contracts/event"
 	"github.com/redis/go-redis/v9"
@@ -30,17 +29,17 @@ func (r *RedisDriver) Publish() error {
 		return err
 	}
 
-	if err := r.connection.Publish(context.Background(), r.Job.Signature(), payload).Err(); err != nil {
+	if err := r.connection.Publish(context.Background(), r.Job.Topic(), payload).Err(); err != nil {
 		return err
 	}
 
-	r.Logger.Infof("'%s' has been published: %v", r.Job.Signature(), r.Job.GetPayload())
+	r.Logger.Infof("'%s' has been published: %v", r.Job.Topic(), r.Job.GetPayload())
 
 	return nil
 }
 
 func (r *RedisDriver) Subscribe(c context.Context) error {
-	stream := r.connection.Subscribe(c, r.Job.Signature())
+	stream := r.connection.Subscribe(c, r.Topic)
 	defer stream.Close()
 
 	for {
@@ -50,20 +49,8 @@ func (r *RedisDriver) Subscribe(c context.Context) error {
 			continue
 		}
 
-		jobInstance, ok := reflect.New(reflect.TypeOf(r.Job)).Interface().(ContractEvent.Job)
-		if !ok {
-			r.Logger.Warnf("%T doesnt implement Job", r.Job)
-
-			continue
-		}
-
-		if err = json.Unmarshal([]byte(msg.Payload), jobInstance); err != nil {
-			r.Logger.Infof("Error unmarshalling payload: %v\n", err.Error())
-			continue
-		}
-
 		for _, listener := range r.Listeners {
-			if err = listener.Handle(jobInstance); err != nil {
+			if err = listener.Handle([]byte(msg.Payload)); err != nil {
 				r.Logger.Errorf("Error calling Handle method: %v\n", err.Error())
 			}
 		}

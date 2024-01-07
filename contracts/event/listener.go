@@ -1,6 +1,6 @@
 package event
 
 type Listener interface {
-	Handle(event Job) error
+	Handle(messages []byte) error
 	Signature() string
 }

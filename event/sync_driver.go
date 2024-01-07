@@ -2,9 +2,11 @@ package event
 
 import (
 	"context"
+	"encoding/json"
 	"sync"
 
 	ContractEvent "github.com/fwidjaya20/symphonic/contracts/event"
+	"github.com/sirupsen/logrus"
 )
 
 type SyncDriver struct {
@@ -24,13 +26,22 @@ func (d *SyncDriver) Publish() error {
 
 	d.Logger.Infof("'%s' has been published: %v", d.Job.Signature(), d.Job.GetPayload())
 
-	wg.Add(len(d.Listeners))
+	payload, err := json.Marshal(d.Job.GetPayload())
+	if err != nil {
+		d.Logger.WithFields(logrus.Fields{
+			logrus.ErrorKey: err,
+		}).Errorf("Unable to marshal %v", d.Job.GetPayload())
+
+		return err
+	}
 
 	for _, listener := range d.Listeners {
+		wg.Add(1)
+
 		go func(callback ContractEvent.Listener) {
 			defer wg.Done()
 
-			if err := callback.Handle(d.Job); err != nil {
+			if err := callback.Handle(payload); err != nil {
 				mu.Lock()
 				defer mu.Unlock()
 

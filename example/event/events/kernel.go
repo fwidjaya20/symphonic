@@ -4,12 +4,9 @@ import ContractEvent "github.com/fwidjaya20/symphonic/contracts/event"
 
 type Kernel struct{}
 
-func (k *Kernel) Listen() ContractEvent.Collection {
-	return ContractEvent.Collection{
-		//nolint:exhaustruct // ignore due to only retrieve the event topics
-		PostCreated{}.Topic(): []ContractEvent.Listener{
-			&CalculateAuthorStatistic{},
-			&SendNewsletterNotification{},
-		},
+func (k *Kernel) Listener() []ContractEvent.Listener {
+	return []ContractEvent.Listener{
+		&CalculateAuthorStatistic{},
+		&SendNewsletterNotification{},
 	}
 }

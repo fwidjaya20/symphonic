@@ -11,12 +11,8 @@ import (
 type Application struct {
 	config    ContractConfig.Config
 	driver    ContractEvent.QueueDriver
-	listeners ContractEvent.Collection
+	listeners []ContractEvent.Listener
 	logger    ContractLog.Logger
-}
-
-func (a *Application) Collection() ContractEvent.Collection {
-	return a.listeners
 }
 
 func (a *Application) Flush() error {
@@ -24,10 +20,14 @@ func (a *Application) Flush() error {
 }
 
 func (a *Application) Job(job ContractEvent.Job) ContractEvent.Bus {
-	return NewEventBus(a.config, job, a.listeners[job.Topic()], a.logger)
+	return NewEventBus(a.config, job, a.listeners, a.logger)
 }
 
-func (a *Application) Register(listeners ContractEvent.Collection) {
+func (a *Application) Listeners() []ContractEvent.Listener {
+	return a.listeners
+}
+
+func (a *Application) Register(listeners []ContractEvent.Listener) {
 	a.listeners = listeners
 }
 
@@ -36,9 +36,10 @@ func (a *Application) Run(config ContractEvent.RunEvent) error {
 		Config:        a.config,
 		ConsumerGroup: config.ConsumerGroup,
 		InitialOffset: config.Offset,
-		Job:           config.Job,
-		Listeners:     a.Collection()[config.Job.Signature()],
+		Job:           nil,
+		Listeners:     a.listeners,
 		Logger:        a.logger,
+		Topic:         config.Topic,
 	})
 
 	return a.driver.Subscribe(context.Background())
@@ -48,7 +49,7 @@ func NewApplication(config ContractConfig.Config, logger ContractLog.Logger) Con
 	return &Application{
 		config:    config,
 		driver:    nil,
-		listeners: make(ContractEvent.Collection),
+		listeners: make([]ContractEvent.Listener, 0),
 		logger:    logger,
 	}
 }

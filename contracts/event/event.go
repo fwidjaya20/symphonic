@@ -1,10 +1,10 @@
 package event
 
 type Event interface {
-	Collection() Collection
 	Flush() error
 	Job(job Job) Bus
-	Register(events Collection)
+	Listeners() []Listener
+	Register(listeners []Listener)
 	Run(config RunEvent) error
 }
 
@@ -13,11 +13,9 @@ type Bus interface {
 	Publish() error
 }
 
-type Collection = map[string][]Listener
-
 type RunEvent struct {
 	Connection    string
 	ConsumerGroup string
-	Job           Job
+	Topic         string
 	Offset        Offset
 }

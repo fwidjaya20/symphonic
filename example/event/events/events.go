@@ -2,6 +2,11 @@ package events
 
 import "time"
 
+const (
+	PostCreatedEvent = "created"
+	PostCreatedTopic = "post.created"
+)
+
 type PostCreated struct {
 	ID        int64     `json:"id"`
 	Author    string    `json:"author"`
@@ -13,9 +18,9 @@ func (pc PostCreated) GetPayload() any {
 }
 
 func (pc PostCreated) Signature() string {
-	return "Post.Created"
+	return PostCreatedEvent
 }
 
 func (pc PostCreated) Topic() string {
-	return "Post.Created"
+	return PostCreatedTopic
 }

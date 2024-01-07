@@ -14,6 +14,7 @@ type DriverArgs struct {
 	Job           Job
 	Listeners     []Listener
 	Logger        ContractLog.Logger
+	Topic         string
 }
 
 type QueueDriver interface {
