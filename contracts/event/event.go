@@ -16,6 +16,6 @@ type Bus interface {
 type RunEvent struct {
 	Connection    string
 	ConsumerGroup string
-	Topic         string
+	Job           Job
 	Offset        Offset
 }

@@ -17,7 +17,7 @@ func (pc PostCreated) GetPayload() any {
 	return pc
 }
 
-func (pc PostCreated) Signature() string {
+func (pc PostCreated) Event() string {
 	return PostCreatedEvent
 }
 

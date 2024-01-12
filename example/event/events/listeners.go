@@ -1,42 +1,35 @@
 package events
 
 import (
-	"encoding/json"
 	"fmt"
+
+	ContractEvent "github.com/fwidjaya20/symphonic/contracts/event"
 )
 
 type CalculateAuthorStatistic struct{}
 
-func (l *CalculateAuthorStatistic) Handle(payload []byte) error {
-	var data PostCreated
-
-	if err := json.Unmarshal(payload, &data); err != nil {
-		return err
-	}
-
-	fmt.Println(l.Signature(), payload)
-
-	return nil
+func (l *CalculateAuthorStatistic) Event() string {
+	return PostCreatedEvent
 }
 
-func (l *CalculateAuthorStatistic) Signature() string {
-	return "Calculate Author Statistic"
+func (l *CalculateAuthorStatistic) Handle(job ContractEvent.Job) error {
+	payload, _ := job.GetPayload().(PostCreated)
+
+	fmt.Println("Calculate Author Statistic", l.Event(), payload)
+
+	return nil
 }
 
 type SendNewsletterNotification struct{}
 
-func (l SendNewsletterNotification) Handle(payload []byte) error {
-	var data PostCreated
-
-	if err := json.Unmarshal(payload, &data); err != nil {
-		return err
-	}
-
-	fmt.Println(l.Signature(), payload)
-
-	return nil
+func (l SendNewsletterNotification) Event() string {
+	return PostCreatedEvent
 }
 
-func (l SendNewsletterNotification) Signature() string {
-	return "Send Newsletter Notification"
+func (l SendNewsletterNotification) Handle(job ContractEvent.Job) error {
+	payload, _ := job.GetPayload().(PostCreated)
+
+	fmt.Println("Send Newsletter Notification", l.Event(), payload)
+
+	return nil
 }

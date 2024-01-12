@@ -36,10 +36,9 @@ func (a *Application) Run(config ContractEvent.RunEvent) error {
 		Config:        a.config,
 		ConsumerGroup: config.ConsumerGroup,
 		InitialOffset: config.Offset,
-		Job:           nil,
+		Job:           config.Job,
 		Listeners:     a.listeners,
 		Logger:        a.logger,
-		Topic:         config.Topic,
 	})
 
 	return a.driver.Subscribe(context.Background())

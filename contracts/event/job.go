@@ -1,7 +1,7 @@
 package event
 
 type Job interface {
+	Event() string
 	GetPayload() any
-	Signature() string
 	Topic() string
 }

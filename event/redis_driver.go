@@ -4,9 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"reflect"
 
 	ContractEvent "github.com/fwidjaya20/symphonic/contracts/event"
 	"github.com/redis/go-redis/v9"
+	"github.com/sirupsen/logrus"
 )
 
 type RedisDriver struct {
@@ -39,18 +41,37 @@ func (r *RedisDriver) Publish() error {
 }
 
 func (r *RedisDriver) Subscribe(c context.Context) error {
-	stream := r.connection.Subscribe(c, r.Topic)
+	stream := r.connection.Subscribe(c, r.Job.Topic())
 	defer stream.Close()
 
 	for {
 		msg, err := stream.ReceiveMessage(c)
 		if err != nil {
-			fmt.Printf("Error receiving message: %v\n", err)
+			r.Logger.WithFields(logrus.Fields{
+				logrus.ErrorKey: err,
+			}).Errorf("failed to consume messages with '%s' topic", r.Job.Topic())
+
+			continue
+		}
+
+		jobInstance, ok := reflect.New(reflect.TypeOf(r.Job)).Interface().(ContractEvent.Job)
+		if !ok {
+			r.Logger.Warnf("%T doesnt implement Job", r.Job)
+
+			continue
+		}
+
+		if err = json.Unmarshal([]byte(msg.Payload), jobInstance); err != nil {
+			r.Logger.WithFields(logrus.Fields{
+				logrus.ErrorKey: err,
+				"payload":       msg.Payload,
+			}).Warn("error unmarshalling payload")
+
 			continue
 		}
 
 		for _, listener := range r.Listeners {
-			if err = listener.Handle([]byte(msg.Payload)); err != nil {
+			if err = listener.Handle(jobInstance); err != nil {
 				r.Logger.Errorf("Error calling Handle method: %v\n", err.Error())
 			}
 		}
