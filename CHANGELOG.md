@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2023-01-12
+
+### Changed
+
+- Change `Handle` parameters to receive `Job` insteadof `[]byte` on Listener.
+
 ## [1.2.0] - 2023-01-07
 
 ### Changed
@@ -92,6 +98,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support `Schedule` feature.
 - Support `Queue` feature
 
+[1.3.0]: https://github.com/fwidjaya20/symphonic/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/fwidjaya20/symphonic/compare/v1.1.8...v1.2.0
 [1.1.8]: https://github.com/fwidjaya20/symphonic/compare/v1.1.7...v1.1.8
 [1.1.7]: https://github.com/fwidjaya20/symphonic/compare/v1.1.6...v1.1.7
